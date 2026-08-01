@@ -280,9 +280,16 @@ function finalizeProject(proj: VideoProject, prompt: string, targetDuration: Vid
 
   const extendedScenes = autoExtendSceneDurations(finalScenes);
 
+  const safeScenes = extendedScenes.map((s) => ({
+    ...s,
+    visualPrimitives: Array.isArray(s.visualPrimitives) ? s.visualPrimitives : [],
+    overlayElements: Array.isArray(s.overlayElements) ? s.overlayElements : [],
+    visualLanguage: s.visualLanguage || { primaryColor: "#6366F1", secondaryColor: "#8B5CF6" },
+  }));
+
   return {
     ...proj,
-    scenes: extendedScenes,
+    scenes: safeScenes,
   };
 }
 

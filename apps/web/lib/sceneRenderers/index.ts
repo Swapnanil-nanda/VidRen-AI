@@ -56,7 +56,7 @@ function pulseAlpha(timestamp: number): number {
 
 export const renderProcessFlow: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
-  const prims = scene.visualPrimitives.filter((p) => p.type === "node" || p.type === "box");
+  const prims = (scene.visualPrimitives || []).filter((p) => p && (p.type === "node" || p.type === "box"));
   const nodes = prims.length > 0 ? prims : [
     { id: "n1", label: "Initial Phase", detail: scene.title.slice(0, 24), x: 0.25, y: 0.5 },
     { id: "n2", label: "Core Action", detail: (scene.purpose || scene.title).slice(0, 24), x: 0.5, y: 0.5 },
@@ -217,7 +217,7 @@ export const renderTimeline: RendererFunction = (ctx, scene, timestamp, duration
 
 export const renderComparison: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
-  const prims = scene.visualPrimitives.filter((p) => p.type === "box" || p.type === "node");
+  const prims = (scene.visualPrimitives || []).filter((p) => p && (p.type === "box" || p.type === "node"));
   const leftItem = prims[0] || { label: "Primary Aspect", detail: scene.title };
   const rightItem = prims[1] || { label: "Target Impact", detail: scene.purpose || "Secondary Aspect" };
 
@@ -750,7 +750,7 @@ export const renderHero3D: RendererFunction = (ctx, scene, timestamp, duration, 
 
   render3DModel(ctx, modelElement, timestamp * 1000);
 
-  const labels = scene.visualPrimitives.filter((p) => p.type !== "3d-model");
+  const labels = (scene.visualPrimitives || []).filter((p) => p && p.type !== "3d-model");
   labels.forEach((lbl, idx) => {
     const lblVis = elementVisibility(progress, idx, labels.length);
     if (lblVis <= 0) return;

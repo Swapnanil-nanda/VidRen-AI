@@ -139,8 +139,8 @@ export function createFrameRenderer(scene: ScenePlan, config: RenderConfig & { b
     const rendererFn: RendererFunction = RENDERER_REGISTRY[rendererType] || RENDERER_REGISTRY.process;
     rendererFn(ctx, scene, timestamp, duration, config);
 
-    if (scene.overlayElements && scene.overlayElements.length > 0) {
-      const strokes = scene.overlayElements.filter((el) => el.kind === "stroke").map((el) => el as any);
+    if (scene.overlayElements && Array.isArray(scene.overlayElements) && scene.overlayElements.length > 0) {
+      const strokes = scene.overlayElements.filter((el) => el && el.kind === "stroke").map((el) => el as any);
       if (strokes.length > 0) renderStrokes(ctx, strokes);
     }
 
