@@ -216,6 +216,7 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
   const currentScene = scenes[sceneIdx % scenes.length];
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     let animFrame: number;
     let startTime = performance.now();
 
