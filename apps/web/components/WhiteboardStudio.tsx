@@ -213,6 +213,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
         canUndo={false}
         canRedo={false}
         onExport={() => setShowFinalizerModal(true)}
+        onBack={onBackToGenerator}
       />
 
       {}

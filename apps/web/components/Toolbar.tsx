@@ -57,6 +57,7 @@ export interface ToolbarProps {
   canUndo: boolean;
   canRedo: boolean;
   onExport: () => void;
+  onBack?: () => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -80,7 +81,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onRedo,
   canUndo,
   canRedo,
-  onExport
+  onExport,
+  onBack,
 }) => {
   const tools = [
     { id: "select" as Tool, icon: MousePointer, title: "Select" },
@@ -96,7 +98,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <div className="flex h-12 w-full items-center justify-between border-b border-slate-800/80 bg-slate-900/95 px-3 backdrop-blur-xl shrink-0 select-none z-50">
       <div className="flex items-center gap-1.5 h-full overflow-x-auto no-scrollbar py-2">
-        {}
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 transition-all border border-slate-700/50 mr-1"
+            title="Back to Generator"
+          >
+            <span className="text-sky-400 font-bold">←</span>
+            <span>Back</span>
+          </button>
+        )}
         <div className="flex items-center gap-2 mr-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-cyan-300 shadow-inner text-slate-950 font-bold">
             <span className="text-sm">✍</span>
