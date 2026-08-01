@@ -1,0 +1,127 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum PlanTier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  name          String?
+  avatarUrl     String?
+  planTier      PlanTier    @default(FREE)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  memberships   WorkspaceMember[]
+  canvases      Canvas[]
+}
+
+model Workspace {
+  id            String            @id @default(uuid())
+  name          String
+  slug          String            @unique
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  members       WorkspaceMember[]
+  projects      Project[]
+  knowledgeBases KnowledgeBase[]
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  role        Role      @default(MEMBER)
+  userId      String
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  canvases    Canvas[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Canvas {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  dslAst      Json      // VidRenDocumentAST schema format
+  isPublic    Boolean   @default(false)
+  version     Int       @default(1)
+  projectId   String
+  authorId    String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  author      User      @relation(fields: [authorId], references: [id])
+  chats       Chat[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model KnowledgeBase {
+  id            String              @id @default(uuid())
+  name          String
+  description   String?
+  workspaceId   String
+  vectorNamespace String            @unique
+  workspace     Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  documents     KnowledgeDocument[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}
+
+model KnowledgeDocument {
+  id              String        @id @default(uuid())
+  fileName        String
+  mimeType        String
+  fileSize        Int
+  chunkCount      Int           @default(0)
+  status          String        @default("PENDING") // PENDING, PROCESSING, READY, FAILED
+  knowledgeBaseId String
+  knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Chat {
+  id        String    @id @default(uuid())
+  title     String?
+  canvasId  String
+  canvas    Canvas    @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  role      String   // "user" | "assistant" | "system"
+  content   String
+  citations Json?    // Array of source metadata & character ranges
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}

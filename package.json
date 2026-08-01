@@ -1,0 +1,22 @@
+{
+  "name": "vidren-ai-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev apps/web",
+    "build": "next build apps/web",
+    "start": "next start apps/web",
+    "lint": "next lint apps/web"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1"
+  }
+}

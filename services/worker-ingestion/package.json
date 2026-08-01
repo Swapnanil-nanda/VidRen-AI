@@ -1,0 +1,19 @@
+{
+  "name": "worker-ingestion",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/ingestionWorker.ts",
+  "scripts": {
+    "start": "ts-node src/ingestionWorker.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@vidren/dsl": "file:../../packages/vidren-dsl",
+    "@vidren/rag-engine": "file:../../packages/rag-engine"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2"
+  }
+}

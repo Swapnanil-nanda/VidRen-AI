@@ -1,0 +1,14 @@
+# Dockerfile for Ingestion Worker Service
+FROM node:20-alpine AS base
+WORKDIR /app
+
+COPY package.json ./
+COPY services/worker-ingestion/package.json ./services/worker-ingestion/
+COPY packages/vidren-dsl/package.json ./packages/vidren-dsl/
+COPY packages/rag-engine/package.json ./packages/rag-engine/
+RUN npm install
+
+COPY . .
+RUN npm run build --workspace=services/worker-ingestion || true
+
+CMD ["npm", "start", "--workspace=services/worker-ingestion"]

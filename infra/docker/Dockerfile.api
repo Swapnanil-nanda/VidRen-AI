@@ -1,0 +1,16 @@
+# Dockerfile for Fastify Streaming API Gateway
+FROM node:20-alpine AS base
+WORKDIR /app
+
+COPY package.json ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/vidren-dsl/package.json ./packages/vidren-dsl/
+COPY packages/agent-core/package.json ./packages/agent-core/
+COPY packages/rag-engine/package.json ./packages/rag-engine/
+RUN npm install
+
+COPY . .
+RUN npm run build --workspace=apps/api || true
+
+EXPOSE 4000
+CMD ["npm", "run", "dev", "--workspace=apps/api"]

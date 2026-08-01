@@ -1,0 +1,16 @@
+{
+  "name": "@vidren/runtime",
+  "version": "2.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@vidren/dsl": "file:../vidren-dsl",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.468.0",
+    "katex": "^0.16.11"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
