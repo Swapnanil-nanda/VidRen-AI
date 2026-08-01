@@ -1,7 +1,3 @@
-// ============================================================
-// 3D Visualizer & Projection Engine
-// Renders real 3D animated objects on HTML5 Canvas
-// ============================================================
 
 import { Point } from "../types";
 
@@ -28,7 +24,6 @@ export interface ThreeDObjectElement {
   title?: string;
 }
 
-// 3D Point Projection Helper (Perspective 3D to 2D)
 function project3D(
   x: number,
   y: number,
@@ -39,19 +34,17 @@ function project3D(
   cy: number,
   scale: number = 1
 ): { x: number; y: number; z: number } {
-  // Rotate Y
+  
   const cosY = Math.cos(rotY);
   const sinY = Math.sin(rotY);
   const x1 = x * cosY - z * sinY;
   const z1 = z * cosY + x * sinY;
 
-  // Rotate X
   const cosX = Math.cos(rotX);
   const sinX = Math.sin(rotX);
   const y1 = y * cosX - z1 * sinX;
   const z2 = z1 * cosX + y * sinX;
 
-  // Perspective Projection
   const distance = 400;
   const fov = distance / (distance + z2);
   const px = cx + x1 * fov * scale;
@@ -60,9 +53,6 @@ function project3D(
   return { x: px, y: py, z: z2 };
 }
 
-/**
- * Render a 3D Bloch Sphere Qubit State Space
- */
 export function draw3DBlochSphere(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -77,7 +67,6 @@ export function draw3DBlochSphere(
   ctx.save();
   const radius = size * 0.4;
 
-  // Outer Sphere Glow
   const glow = ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 1.3);
   glow.addColorStop(0, `${primaryColor}22`);
   glow.addColorStop(1, "transparent");
@@ -86,7 +75,6 @@ export function draw3DBlochSphere(
   ctx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
   ctx.fill();
 
-  // Draw Latitude Circles
   const latSteps = 5;
   for (let i = 1; i < latSteps; i++) {
     const latAngle = (i / latSteps - 0.5) * Math.PI;
@@ -107,7 +95,6 @@ export function draw3DBlochSphere(
     ctx.stroke();
   }
 
-  // Draw Longitude Circles
   for (let a = 0; a < 180; a += 45) {
     const rad = (a * Math.PI) / 180;
     ctx.beginPath();
@@ -125,13 +112,11 @@ export function draw3DBlochSphere(
     ctx.stroke();
   }
 
-  // Draw Axes X, Y, Z
   const origin = project3D(0, 0, 0, rotX, rotY, cx, cy, 1);
   const xAxis = project3D(radius * 1.25, 0, 0, rotX, rotY, cx, cy, 1);
   const yAxis = project3D(0, radius * 1.25, 0, rotX, rotY, cx, cy, 1);
   const zAxis = project3D(0, 0, radius * 1.25, rotX, rotY, cx, cy, 1);
 
-  // X Axis (Red)
   ctx.strokeStyle = "#FF8787";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -139,21 +124,18 @@ export function draw3DBlochSphere(
   ctx.lineTo(xAxis.x, xAxis.y);
   ctx.stroke();
 
-  // Y Axis (Green)
   ctx.strokeStyle = "#63E6BE";
   ctx.beginPath();
   ctx.moveTo(origin.x, origin.y);
   ctx.lineTo(yAxis.x, yAxis.y);
   ctx.stroke();
 
-  // Z Axis (Blue)
   ctx.strokeStyle = "#74C0FC";
   ctx.beginPath();
   ctx.moveTo(origin.x, origin.y);
   ctx.lineTo(zAxis.x, zAxis.y);
   ctx.stroke();
 
-  // State Vector |ψ⟩ Animation
   const psiAngle = time * 0.002;
   const psiTheta = Math.PI * 0.35 + Math.sin(psiAngle) * 0.2;
   const psiPhi = psiAngle * 1.5;
@@ -164,7 +146,6 @@ export function draw3DBlochSphere(
 
   const qPt = project3D(qx, qy, qz, rotX, rotY, cx, cy, 1);
 
-  // Draw Qubit Vector Arrow
   ctx.strokeStyle = "#FFE066";
   ctx.lineWidth = 35;
   ctx.shadowColor = "#FFE066";
@@ -175,13 +156,11 @@ export function draw3DBlochSphere(
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  // Qubit Tip Particle
   ctx.fillStyle = "#FFFFFF";
   ctx.beginPath();
   ctx.arc(qPt.x, qPt.y, 6, 0, Math.PI * 2);
   ctx.fill();
 
-  // Label |ψ⟩
   ctx.fillStyle = "#FFE066";
   ctx.font = "bold 13px sans-serif";
   ctx.fillText("|ψ⟩ Qubit Vector", qPt.x + 8, qPt.y - 8);
@@ -189,9 +168,6 @@ export function draw3DBlochSphere(
   ctx.restore();
 }
 
-/**
- * Render a 3D Rotating DNA Double Helix
- */
 export function draw3DDnaHelix(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -222,7 +198,6 @@ export function draw3DDnaHelix(
     const p1 = project3D(x1, yVal, z1, rotX, rotY, cx, cy, 1);
     const p2 = project3D(x2, yVal, z2, rotX, rotY, cx, cy, 1);
 
-    // Connecting Rung Line
     ctx.strokeStyle = "rgba(255,255,255,0.3)";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -230,7 +205,6 @@ export function draw3DDnaHelix(
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
 
-    // Nucleotide 1 Strand
     ctx.fillStyle = primaryColor;
     ctx.shadowColor = primaryColor;
     ctx.shadowBlur = 8;
@@ -238,7 +212,6 @@ export function draw3DDnaHelix(
     ctx.arc(p1.x, p1.y, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Nucleotide 2 Strand
     ctx.fillStyle = secondaryColor;
     ctx.shadowColor = secondaryColor;
     ctx.beginPath();
@@ -250,9 +223,6 @@ export function draw3DDnaHelix(
   ctx.restore();
 }
 
-/**
- * Render a 3D Neural Network Graph Mesh
- */
 export function draw3DNeuralNet(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -278,13 +248,11 @@ export function draw3DNeuralNet(
     }
   });
 
-  // Project Nodes
   const projected = nodes.map((n) => ({
     ...project3D(n.x, n.y, n.z, rotX, rotY, cx, cy, 1),
     layer: n.layer,
   }));
 
-  // Draw Edge Connections
   projected.forEach((n1, i) => {
     projected.forEach((n2, j) => {
       if (n2.layer === n1.layer + 1) {
@@ -299,7 +267,6 @@ export function draw3DNeuralNet(
     });
   });
 
-  // Draw Node Particles
   projected.forEach((n, i) => {
     ctx.fillStyle = n.layer === 1 ? secondaryColor : primaryColor;
     ctx.shadowColor = ctx.fillStyle;
@@ -313,9 +280,6 @@ export function draw3DNeuralNet(
   ctx.restore();
 }
 
-/**
- * Render a 3D Spinning Torus Geometry
- */
 export function draw3DTorus(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -353,9 +317,6 @@ export function draw3DTorus(
   ctx.restore();
 }
 
-/**
- * Dispatcher to render any 3D model type onto canvas
- */
 export function render3DModel(
   ctx: CanvasRenderingContext2D,
   obj: ThreeDObjectElement,

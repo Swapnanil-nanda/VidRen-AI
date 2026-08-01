@@ -106,7 +106,7 @@ export function ScenePanel({
 
   return (
     <div className="w-[360px] h-full flex flex-col bg-[#0F0F11] border-r border-white/10 text-text-primary select-none">
-      {/* Header & Re-prompt Section */}
+      {}
       <div className="p-4 border-b border-white/10 bg-[#111113] flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
@@ -139,7 +139,7 @@ export function ScenePanel({
         )}
       </div>
 
-      {/* Editable Scene Cards List */}
+      {}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         <AnimatePresence initial={false}>
           {scenes.map((scene, index) => {
@@ -159,7 +159,7 @@ export function ScenePanel({
                     : "bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/[0.04]"
                 }`}
               >
-                {/* Card Header */}
+                {}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span
@@ -223,7 +223,7 @@ export function ScenePanel({
                   </div>
                 </div>
 
-                {/* Editable Title */}
+                {}
                 <input
                   type="text"
                   value={scene.title}
@@ -232,7 +232,7 @@ export function ScenePanel({
                   className="w-full bg-transparent font-semibold text-xs text-white border-b border-transparent focus:border-indigo-500 focus:outline-none mb-1.5 py-0.5"
                 />
 
-                {/* Editable Narration */}
+                {}
                 <textarea
                   value={scene.narration}
                   onChange={(e) => onUpdateScene(index, { narration: e.target.value })}
@@ -241,7 +241,7 @@ export function ScenePanel({
                   className="w-full bg-black/30 border border-white/5 focus:border-indigo-500 rounded p-2 text-[11px] text-text-secondary placeholder-text-tertiary focus:outline-none resize-none leading-normal mb-2"
                 />
 
-                {/* Custom Image Badge / Indicator */}
+                {}
                 {scene.customImageUrl && (
                   <div className="mb-2 p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-between">
                     <div className="flex items-center gap-2 overflow-hidden">
@@ -266,7 +266,7 @@ export function ScenePanel({
                   </div>
                 )}
 
-                {/* Expandable Media / Sub-frame Editor Panel */}
+                {}
                 <AnimatePresence>
                   {isEditing && (
                     <motion.div
@@ -281,7 +281,7 @@ export function ScenePanel({
                         <span>Media & Image Source</span>
                       </div>
 
-                      {/* Image URL Input */}
+                      {}
                       <div className="flex items-center gap-1">
                         <input
                           type="url"
@@ -303,7 +303,7 @@ export function ScenePanel({
                         </label>
                       </div>
 
-                      {/* Web Presets Grid */}
+                      {}
                       <div className="space-y-1">
                         <span className="text-[9px] text-text-tertiary">Web Presets:</span>
                         <div className="grid grid-cols-2 gap-1">
@@ -326,7 +326,7 @@ export function ScenePanel({
                         </div>
                       </div>
 
-                      {/* Multi-frame Beats Info */}
+                      {}
                       <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-text-tertiary">
                         <span>Multi-frame Beats:</span>
                         <button
@@ -353,7 +353,7 @@ export function ScenePanel({
                   )}
                 </AnimatePresence>
 
-                {/* Card Footer: Duration & Visual Primitives */}
+                {}
                 <div className="flex items-center justify-between text-[10px] text-text-tertiary pt-1.5 mt-1 border-t border-white/5">
                   <div className="flex items-center gap-1.5">
                     <span>Duration:</span>
@@ -381,7 +381,7 @@ export function ScenePanel({
         </AnimatePresence>
       </div>
 
-      {/* Footer Controls */}
+      {}
       <div className="p-3 border-t border-white/10 bg-[#111113] flex items-center justify-between">
         <div className="text-xs font-mono text-text-tertiary">
           Total Duration: <span className="text-white font-bold">{Math.round(totalDuration)}s</span>

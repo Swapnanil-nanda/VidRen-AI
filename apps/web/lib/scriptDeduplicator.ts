@@ -1,12 +1,6 @@
-// ============================================================
-// ML / Entropy Script Deduplication & Quality Algorithm
-// Scans video scripts for sentence similarity, n-gram overlap, and re-phrased scrap.
-// Guarantees that every single scene in Short, Medium, and Long videos has 100% unique text!
-// ============================================================
 
 import { ScenePlan } from "../types";
 
-/** Compute Jaccard Similarity between two text strings */
 function jaccardSimilarity(textA: string, textB: string): number {
   const wordsA = new Set(textA.toLowerCase().match(/\w+/g) || []);
   const wordsB = new Set(textB.toLowerCase().match(/\w+/g) || []);
@@ -21,7 +15,6 @@ function jaccardSimilarity(textA: string, textB: string): number {
   return intersection / union;
 }
 
-// Deep Domain Lexicons to enrich repetitive scripts dynamically
 const DOMAIN_RICH_EXPLANATIONS: Record<string, string[]> = {
   french: [
     "Prior to 1789, France was governed by an absolute monarchy where King Louis XVI wielded unchecked legislative authority.",
@@ -86,7 +79,6 @@ export function deduplicateAndEnrichScript(scenes: ScenePlan[], prompt: string):
     let narration = scene.narration ? scene.narration.trim() : "";
     let isDuplicate = false;
 
-    // Check similarity against all previous scene narrations
     for (const prev of seenNarrations) {
       if (jaccardSimilarity(narration, prev) > 0.35 || narration === prev) {
         isDuplicate = true;
@@ -94,7 +86,6 @@ export function deduplicateAndEnrichScript(scenes: ScenePlan[], prompt: string):
       }
     }
 
-    // If repetitive scrap detected, replace with rich domain-specific explanation
     if (isDuplicate || narration.includes("analyzing section") || narration.includes("examining key mechanism") || narration.length < 15) {
       if (richPool.length > 0) {
         narration = richPool[idx % richPool.length];
@@ -105,7 +96,6 @@ export function deduplicateAndEnrichScript(scenes: ScenePlan[], prompt: string):
 
     seenNarrations.add(narration);
 
-    // Clean title (remove "Stage 1.", "1.")
     const cleanTitle = scene.title.replace(/^\d+\.\s*/, "").replace(/^Stage\s*\d+:?\s*/i, "");
 
     return {

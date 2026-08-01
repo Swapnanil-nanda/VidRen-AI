@@ -1,8 +1,3 @@
-// ============================================================
-// Animation Primitive & Visual Structure Deduplication Engine
-// Ensures that EVERY scene has 100% unique visual primitive cards,
-// unique diagram node labels, unique layout coordinates, and unique animation beats!
-// ============================================================
 
 import { ScenePlan, RendererType, VisualPrimitive } from "../types";
 
@@ -27,31 +22,26 @@ export function deduplicateAndEnrichAnimations(scenes: ScenePlan[], prompt: stri
   return scenes.map((scene, idx) => {
     let chosenRenderer = scene.rendererType;
 
-    // Rule 1: Fix invalid piechart selection for Backpropagation / AI
     if (chosenRenderer === "piechart" && (lower.includes("backprop") || lower.includes("neural") || lower.includes("gradient") || lower.includes("chain rule"))) {
       chosenRenderer = "architecture";
     }
 
-    // Rule 2: Strict Renderer Rotation — NO TWO CONSECUTIVE SCENES SHARE THE SAME ANIMATION TYPE
     if (chosenRenderer === lastRenderer) {
       const candidates = ALL_RENDERERS.filter((r) => r !== lastRenderer);
       chosenRenderer = candidates[(idx + 3) % candidates.length];
     }
     lastRenderer = chosenRenderer;
 
-    // Rule 3: Visual Primitives Label Deduplication & Coordinate Randomization
     const cleanPrimitives: VisualPrimitive[] = (scene.visualPrimitives || []).map((prim, pIdx) => {
       let label = prim.label || `Node ${pIdx + 1}`;
       let detail = prim.detail || `Property ${pIdx + 1}`;
 
-      // If primitive label was used in a previous scene, enrich it with domain specificity!
       if (seenPrimitiveLabels.has(label.toLowerCase())) {
         label = `${scene.title.slice(0, 18)} — ${label}`;
         detail = `Specific parameter ${idx + 1}.${pIdx + 1}`;
       }
       seenPrimitiveLabels.add(label.toLowerCase());
 
-      // Layout coordinate variation per scene so no two cards draw at identical screen positions
       const offsetX = ((idx % 3) - 1) * 0.05;
       const offsetY = ((pIdx % 2) - 0.5) * 0.04;
 
@@ -64,7 +54,6 @@ export function deduplicateAndEnrichAnimations(scenes: ScenePlan[], prompt: stri
       };
     });
 
-    // Rule 4: If scene has no primitives, construct 2 unique domain primitives
     if (cleanPrimitives.length === 0) {
       cleanPrimitives.push(
         {

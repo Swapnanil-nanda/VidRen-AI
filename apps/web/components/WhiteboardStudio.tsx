@@ -40,7 +40,6 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFinalizerModal, setShowFinalizerModal] = useState(false);
 
-  // Toolbar State
   const [activeTool, setActiveTool] = useState<Tool>("pen");
   const [brushSize, setBrushSize] = useState(4);
   const [activeColor, setActiveColor] = useState("#FFFFFF");
@@ -50,14 +49,12 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
   const [voiceover, setVoiceover] = useState<VoiceOption>("nova");
 
-  // Playback State
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState<PlaybackSpeed>(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [bgMusic, setBgMusic] = useState<BgMusic>("none");
 
-  // AI Voice Speech State
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speakingText, setSpeakingText] = useState("");
 
@@ -71,7 +68,6 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
     });
   }, []);
 
-  // AI Prompt Scene Generator Handler (Calls unified aiPlanner)
   const handleGenerateFromPrompt = useCallback(async (promptText: string) => {
     setIsGenerating(true);
     stopNarration();
@@ -88,7 +84,6 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
     }
   }, []);
 
-  // Scene Operations
   const handleAddScene = useCallback(() => {
     const newScene = createEmptyScenePlan(project.scenes.length);
     setProject((prev) => ({
@@ -159,7 +154,6 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
     []
   );
 
-  // Playback Loop
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
     if (isPlaying) {
@@ -196,7 +190,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
 
   return (
     <div className="w-screen h-screen flex flex-col bg-[#09090B] overflow-hidden font-sans">
-      {/* Top Toolbar */}
+      {}
       <Toolbar
         activeTool={activeTool}
         onToolChange={setActiveTool}
@@ -221,7 +215,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
         onExport={() => setShowFinalizerModal(true)}
       />
 
-      {/* Main Studio Body */}
+      {}
       <div className="flex-1 flex overflow-hidden relative">
         <ScenePanel
           scenes={project.scenes}
@@ -239,7 +233,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
           boardStyle={boardStyle}
         />
 
-        {/* Live Canvas Preview rendering selected ScenePlan */}
+        {}
         <div className="flex-1 h-full bg-[#111113] relative">
           <Canvas
             scenePlan={currentScene}
@@ -258,7 +252,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
         </div>
       </div>
 
-      {/* Timeline Controls */}
+      {}
       <Timeline
         scenes={project.scenes as any}
         activeSceneIndex={activeSceneIndex}
@@ -277,7 +271,7 @@ export const WhiteboardStudio: React.FC<WhiteboardStudioProps> = ({
         onToggleFullscreen={() => {}}
       />
 
-      {/* Export Modal */}
+      {}
       <VideoFinalizerModal
         isOpen={showFinalizerModal}
         onClose={() => setShowFinalizerModal(false)}

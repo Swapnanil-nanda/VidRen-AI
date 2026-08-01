@@ -98,7 +98,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
     });
 
     try {
-      // Stage 1: AI Planning & Schema Validation
+      
       await new Promise((r) => setTimeout(r, 400));
       setPipelineState({
         stage: "planning",
@@ -115,7 +115,6 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
 
       setPlannedProject(project);
 
-      // Stage 2: Frame Rendering & Video Compositing
       setPipelineState({
         stage: "rendering",
         progress: 60,
@@ -196,7 +195,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white flex flex-col font-sans selection:bg-indigo-500/30 selection:text-white">
-      {/* Header */}
+      {}
       <header
         className="h-16 px-6 flex items-center justify-between sticky top-0 z-40 backdrop-blur-xl"
         style={{
@@ -260,9 +259,9 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
         </div>
       </header>
 
-      {/* Main Container */}
+      {}
       <main className="flex-1 flex flex-col items-center justify-center p-6 max-w-4xl mx-auto w-full">
-        {/* Idle Prompt Input */}
+        {}
         {pipelineState.stage === "idle" && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -345,7 +344,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
               </div>
             </div>
 
-            {/* Example prompts */}
+            {}
             <div className="w-full mt-8">
               <p className="text-caption text-xs mb-3 text-left">
                 Try an example domain:
@@ -365,7 +364,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
           </motion.div>
         )}
 
-        {/* Processing State */}
+        {}
         {isProcessing && (
           <div className="w-full py-12 flex flex-col items-center">
             <h2 className="text-title text-xl mb-2 text-center gradient-text">
@@ -385,7 +384,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
           </div>
         )}
 
-        {/* Video Player Output */}
+        {}
         {pipelineState.stage === "complete" && videoResult && plannedProject && (
           <div className="w-full space-y-6">
             <div className="flex items-center justify-between">
@@ -423,7 +422,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
               onNewPrompt={handleReset}
             />
 
-            {/* Scene Plan Breakdown */}
+            {}
             <div className="mt-8 pt-8 border-t border-white/[0.06]">
               <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-4">
                 Generated ScenePlan Breakdown ({plannedProject.scenes.length} Scenes)
@@ -455,7 +454,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
           </div>
         )}
 
-        {/* Error State */}
+        {}
         {pipelineState.stage === "error" && (
           <div className="w-full max-w-md p-6 rounded-2xl border border-red-500/20 bg-red-500/5 text-center">
             <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
@@ -470,7 +469,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
         )}
       </main>
 
-      {/* Settings Modal */}
+      {}
       <AnimatePresence>
         {showSettingsModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
@@ -495,7 +494,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
                 </button>
               </div>
 
-              {/* Export Resolution */}
+              {}
               <div className="mb-5">
                 <label className="block text-xs font-medium text-text-secondary mb-2">
                   Export Resolution
@@ -522,7 +521,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
                 </div>
               </div>
 
-              {/* Frame Rate (FPS) */}
+              {}
               <div className="mb-5">
                 <label className="block text-xs font-medium text-text-secondary mb-2">
                   Frame Rate (FPS)
@@ -544,7 +543,7 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
                 </div>
               </div>
 
-              {/* Video Quality */}
+              {}
               <div className="mb-5">
                 <label className="block text-xs font-medium text-text-secondary mb-2">
                   Video Quality

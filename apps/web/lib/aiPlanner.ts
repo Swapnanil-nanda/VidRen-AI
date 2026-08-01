@@ -17,7 +17,6 @@ export function getGroqApiKey(): string | null {
   return process.env.NEXT_PUBLIC_GROQ_API_KEY || null;
 }
 
-// 1. French Revolution & History Curriculum (25 Full Scenes for Deep Dive)
 const HISTORICAL_CURRICULUM = [
   { title: "The Ancien Régime & Absolute Monarchy", purpose: "Feudal structure of 18th century France", narration: "Under King Louis XVI, French society was rigidly divided into Three Estates, creating massive social inequality and financial strain.", renderer: "hierarchy" as RendererType },
   { title: "Financial Collapse & Tax Inequality", purpose: "Economic crisis of 1788-1789", narration: "Compounded by war debts and crop failures, the peasantry bore the heaviest tax burden while nobility and clergy enjoyed exemptions.", renderer: "chart" as RendererType },
@@ -46,7 +45,6 @@ const HISTORICAL_CURRICULUM = [
   { title: "Global Impact & Enduring Legacy", purpose: "Enduring influence of 1789", narration: "The French Revolution reshaped global politics, spreading democratic ideals, secular law, and human rights worldwide.", renderer: "hero3d" as RendererType },
 ];
 
-// 2. Backpropagation & AI Neural Network Curriculum (25 Full Scenes for Deep Dive)
 const BACKPROPAGATION_CURRICULUM = [
   { title: "Neural Network Architecture & Node Layers", purpose: "Input, hidden, and output layer connections", narration: "A deep neural network consists of interconnected node layers that transform raw input features into prediction probabilities.", renderer: "architecture" as RendererType },
   { title: "Affine Weight Multiplications & Biases", purpose: "Computing layer inputs z = Wx + b", narration: "Each layer computes affine transformations by multiplying input vectors by weight matrices and adding bias vectors.", renderer: "equation" as RendererType },
@@ -75,7 +73,6 @@ const BACKPROPAGATION_CURRICULUM = [
   { title: "Global Minima & Synthesis", purpose: "Final convergence and generalization", narration: "Through continuous backpropagation iterations, deep neural networks converge to highly effective predictive representations.", renderer: "hero3d" as RendererType },
 ];
 
-// 3. Quantum Physics Curriculum (25 Full Scenes for Deep Dive)
 const QUANTUM_PHYSICS_CURRICULUM = [
   { title: "Fundamental Quantum Mechanics", purpose: "Wave-particle duality & Planck's constant", narration: "At microscopic scales, physical systems exhibit both wave-like and particle-like behaviors governed by Planck's quantum of action.", renderer: "simulation" as RendererType },
   { title: "Quantum Superposition & Wavefunctions", purpose: "Schrödinger equation state vectors", narration: "A quantum system exists in a linear superposition of all possible physical states until an observation forces collapse.", renderer: "equation" as RendererType },
@@ -104,7 +101,6 @@ const QUANTUM_PHYSICS_CURRICULUM = [
   { title: "Future Horizons & Physical Frontiers", purpose: "Synthesis of quantum technology", narration: "As fault-tolerant quantum hardware matures, quantum technology promises to revolutionize material science, cryptography, and artificial intelligence.", renderer: "hero3d" as RendererType },
 ];
 
-/** Dynamic topic analyzer for fallback planning */
 function generateDynamicFallbackProject(prompt: string, targetDuration: VideoTargetDuration = "standard"): VideoProject {
   const lower = prompt.toLowerCase();
   const durConfig = DURATION_CONFIGS[targetDuration];
@@ -273,18 +269,15 @@ async function planWithGroq(prompt: string, apiKey: string, systemPrompt: string
 function finalizeProject(proj: VideoProject, prompt: string, targetDuration: VideoTargetDuration = "standard"): VideoProject {
   const cleanScriptScenes = deduplicateAndEnrichScript(proj.scenes, prompt);
 
-  // Enforce scene count by duration mode: Deep Dive = 20-25 scenes, Standard = 12-15 scenes, Quick = 5-6 scenes
   const targetCount = targetDuration === "deep_dive" ? 25 : targetDuration === "quick" ? 5 : 12;
 
   let finalScenes = cleanScriptScenes;
 
-  // If AI generated fewer scenes than required for Deep Dive, expand to 25 full scenes!
   if (finalScenes.length < targetCount) {
     const fallbackProj = generateDynamicFallbackProject(prompt, targetDuration);
     finalScenes = fallbackProj.scenes;
   }
 
-  // Auto-extend scene durations if narration script requires more speaking time!
   const extendedScenes = autoExtendSceneDurations(finalScenes);
 
   return {
@@ -314,7 +307,6 @@ Generate exactly ${durConfig.maxScenes} scenes. Each scene duration MUST be exac
 Return valid JSON only matching VideoProject structure.
 `;
 
-  // 1. Groq API Key
   if (userKey && userKey.startsWith("gsk_")) {
     try {
       const proj = await planWithGroq(cleanPrompt, userKey, systemPrompt);
@@ -333,7 +325,6 @@ Return valid JSON only matching VideoProject structure.
     }
   }
 
-  // 2. Gemini API Key
   if (userKey && !userKey.startsWith("gsk_")) {
     const modelsToTry = [config.model || "gemini-2.0-flash", "gemini-1.5-flash"];
 
@@ -395,7 +386,6 @@ Return valid JSON only matching VideoProject structure.
     }
   }
 
-  // 3. Fallback Dynamic Generator with Deep Dive 25-Scene Support
   const fallback = generateDynamicFallbackProject(cleanPrompt, targetDuration);
   return finalizeProject(fallback, cleanPrompt, targetDuration);
 }

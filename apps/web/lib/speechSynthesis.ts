@@ -1,7 +1,3 @@
-// ============================================================
-// Web Speech API & Web Audio Synthesizer Engine
-// Continuous Master Script Speech Synthesis (Zero Scene-Boundary Pauses!)
-// ============================================================
 
 import { VoiceOption } from "../types";
 
@@ -30,7 +26,6 @@ function notifyState(isSpeaking: boolean, text: string = "") {
   }
 }
 
-/** AudioContext Sound Generator (Plays pleasant audio chime & unlocks browser audio) */
 export function playAudioChime(freq: number = 440, durationMs: number = 200, volume: number = 0.3): void {
   if (typeof window === "undefined") return;
 
@@ -65,7 +60,6 @@ export function playAudioChime(freq: number = 440, durationMs: number = 200, vol
   }
 }
 
-/** Pre-warm speech synthesis & unlock audio on user interaction */
 export function initSpeechSynthesis(): void {
   if (typeof window !== "undefined") {
     if ("speechSynthesis" in window) {
@@ -75,7 +69,7 @@ export function initSpeechSynthesis(): void {
       }
       synth.getVoices();
     }
-    playAudioChime(523.25, 100, 0.05); // Subtle C5 audio unlock chime
+    playAudioChime(523.25, 100, 0.05); 
   }
 }
 
@@ -88,11 +82,6 @@ export function stopNarration(): void {
   }
 }
 
-/**
- * Continuous Master Script Narrator Engine:
- * Speaks the complete, unified Master Documentary Script as a single, uninterrupted speech utterance!
- * Eliminates all scene-boundary audio pauses, stops, and repetitive restarts!
- */
 export function speakMasterScriptContinuously(
   masterScriptText: string,
   voiceOption: VoiceOption = "nova",
@@ -110,7 +99,6 @@ export function speakMasterScriptContinuously(
     synth.resume();
   }
 
-  // Continuous speech protection: do NOT restart if already speaking the exact master script!
   if (synth.speaking && window._activeUtteranceText === masterScriptText) {
     return;
   }
@@ -122,12 +110,11 @@ export function speakMasterScriptContinuously(
     return;
   }
 
-  playAudioChime(659.25, 120, 0.12 * volume); // E5 subtle start tone
+  playAudioChime(659.25, 120, 0.12 * volume); 
 
   const utterance = new SpeechSynthesisUtterance(masterScriptText);
   utterance.volume = Math.min(Math.max(volume, 0), 1);
 
-  // Configure natural human conversational voice properties
   switch (voiceOption) {
     case "alloy":
       utterance.pitch = 0.96;

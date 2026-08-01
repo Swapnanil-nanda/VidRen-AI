@@ -47,7 +47,7 @@ export const AIVoiceVisualizer: React.FC<AIVoiceVisualizerProps> = ({
         </div>
       </div>
 
-      {/* Soundwave Equalizer Bars */}
+      {}
       <div className="flex items-end gap-1 h-5 px-1 border-l border-slate-800">
         {bars.map((height, i) => (
           <motion.div

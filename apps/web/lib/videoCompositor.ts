@@ -63,12 +63,6 @@ export function buildNarrationTimeline(scenes: ScenePlan[]): NarrationSegment[] 
   return segments;
 }
 
-/**
-  100% Background-Resilient Video Compositor
-  Uses captureStream(0) + manual track.requestFrame() + Web Worker background timers.
-  This forces the browser to capture and record frames INSTANTLY in background tabs,
-  window minimization, or when the user works in another application!
- */
 export async function composeVideo(
   config: CompositorConfig,
   onProgress?: (progress: CompositorProgress) => void
@@ -83,7 +77,6 @@ export async function composeVideo(
 
   const mimeType = support.supportedMimeType || "";
 
-  // Create off-DOM canvas for rendering
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -93,7 +86,6 @@ export async function composeVideo(
     throw new Error("Could not get 2D context for canvas.");
   }
 
-  // captureStream(0) = Manual frame capture via requestFrame()
   const stream = canvas.captureStream ? canvas.captureStream(0) : (canvas as any).mozCaptureStream?.(0);
   const track = stream?.getVideoTracks?.()?.[0] as any;
 
@@ -143,24 +135,20 @@ export async function composeVideo(
     for (let f = 0; f < totalFrames; f++) {
       const timestamp = f / fps;
 
-      // 1. Draw frame onto 2D context
       ctx.fillStyle = "#09090B";
       ctx.fillRect(0, 0, width, height);
       frameRenderer(ctx, timestamp, sceneDuration);
 
-      // 2. Force manual frame capture into video recorder stream (works in background tabs!)
       if (track && typeof track.requestFrame === "function") {
         track.requestFrame();
       }
 
-      // 3. Supercharged 4ms Web Worker background sleep for ultra-fast background completion
       await backgroundSleep(4);
     }
 
     totalDuration += sceneDuration;
   }
 
-  // Force final frame request to ensure stream flush
   if (track && typeof track.requestFrame === "function") {
     track.requestFrame();
   }

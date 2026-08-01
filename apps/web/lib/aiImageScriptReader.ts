@@ -1,15 +1,9 @@
-// ============================================================
-// Dynamic AI Script Reader & Image Generator Engine
-// Reads scene narration scripts dynamically and generates 100% script-matched image URLs.
-// Eliminates giant static hardcoded image arrays!
-// ============================================================
 
 export function getAIImageUrl(prompt: string, seed: number = 42): string {
   const clean = encodeURIComponent(prompt);
   return `https://image.pollinations.ai/prompt/${clean}?width=1280&height=720&nologo=true&seed=${seed}`;
 }
 
-/** Hash string to deterministic numeric seed */
 function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -19,10 +13,6 @@ function hashString(str: string): number {
   return Math.abs(hash);
 }
 
-/**
- * AI Script Reader: Analyzes narration text & title, extracts visual subjects,
- * and generates dynamic Pollinations / Unsplash image URLs matched strictly to the script!
- */
 export function generateScriptMatchedImageUrl(
   title: string,
   narration: string,
@@ -33,15 +23,13 @@ export function generateScriptMatchedImageUrl(
   const cleanNarration = (narration || "").trim();
   const combined = (cleanTitle + " " + cleanNarration).toLowerCase();
 
-  // Extract key visual subjects directly from the script text
   let visualSubject = cleanTitle;
   if (cleanNarration.length > 10) {
-    // Extract first sentence or primary subject clause from narration script
+    
     const firstSentence = cleanNarration.split(".")[0];
     visualSubject = firstSentence.slice(0, 60);
   }
 
-  // Determine domain visual style automatically based on script text analysis
   let visualStyle = "photorealistic educational illustration, 8k quality, detailed cinematic lighting";
 
   if (
@@ -82,7 +70,6 @@ export function generateScriptMatchedImageUrl(
   const aspectLabel = index === 0 ? "establishing wide view" : index === 1 ? "focused detailed view" : "dramatic angle";
   const prompt = `${visualStyle}, ${aspectLabel} depicting ${visualSubject}, 16:9 aspect ratio, no text, no watermark`;
 
-  // Deterministic seed based on unique script narration hash + sceneNumber + index
   const seed = hashString(cleanNarration + cleanTitle) + sceneNumber * 1000 + index * 37;
 
   return getAIImageUrl(prompt, seed);

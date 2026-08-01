@@ -72,7 +72,7 @@ export const Timeline: React.FC<TimelineProps> = ({
 
   return (
     <div className="h-12 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/80 px-4 flex items-center gap-3 z-30 select-none">
-      {/* Play Controls */}
+      {}
       <div className="flex items-center gap-1">
         <button
           onClick={() => onRestart?.()}
@@ -95,12 +95,12 @@ export const Timeline: React.FC<TimelineProps> = ({
         </button>
       </div>
 
-      {/* Time Display */}
+      {}
       <span className="text-[11px] font-mono text-slate-400 min-w-[70px]">
         {formatTime(currentTime)} / {formatTime(totalDuration)}
       </span>
 
-      {/* Progress Scrubber */}
+      {}
       <div
         className="flex-1 h-1.5 bg-slate-800 rounded-full cursor-pointer group relative"
         onClick={handleScrub}
@@ -112,7 +112,7 @@ export const Timeline: React.FC<TimelineProps> = ({
           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
 
-        {/* Scene markers */}
+        {}
         {sceneCount > 1 &&
           Array.from({ length: sceneCount - 1 }, (_, i) => {
             const markerPos = ((i + 1) / sceneCount) * 100;
@@ -126,12 +126,12 @@ export const Timeline: React.FC<TimelineProps> = ({
           })}
       </div>
 
-      {/* Scene indicator */}
+      {}
       <span className="text-[10px] font-mono text-slate-500 hidden sm:inline">
         Scene {(activeSceneIndex || 0) + 1}/{sceneCount}
       </span>
 
-      {/* Speed */}
+      {}
       <div className="hidden sm:flex items-center gap-0.5">
         {SPEEDS.map((s) => (
           <button
@@ -148,7 +148,7 @@ export const Timeline: React.FC<TimelineProps> = ({
         ))}
       </div>
 
-      {/* Audio */}
+      {}
       <button
         onClick={() => onToggleMute?.()}
         className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
@@ -161,7 +161,7 @@ export const Timeline: React.FC<TimelineProps> = ({
         )}
       </button>
 
-      {/* Background Music */}
+      {}
       <div className="hidden md:flex items-center gap-1">
         <Music className="w-3 h-3 text-slate-500" />
         <select
@@ -176,7 +176,7 @@ export const Timeline: React.FC<TimelineProps> = ({
         </select>
       </div>
 
-      {/* Fullscreen */}
+      {}
       <button
         onClick={() => onToggleFullscreen?.()}
         className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"

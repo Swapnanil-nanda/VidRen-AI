@@ -1,6 +1,3 @@
-// ============================================================
-// VidRen AI — Unified Type Definitions (Single Source of Truth)
-// ============================================================
 
 export type BoardStyle = "blackboard" | "greenboard" | "whiteboard";
 
@@ -28,8 +25,6 @@ export type PlaybackSpeed = 0.5 | 1 | 1.5 | 2;
 
 export type BgMusic = "none" | "lofi" | "ambient" | "rain";
 
-// --- Modular Renderer Types & Visual Primitives ---
-
 export type RendererType =
   | "process"
   | "timeline"
@@ -43,7 +38,7 @@ export type RendererType =
   | "hero3d";
 
 export interface AnimationBeat {
-  timestamp: number; // 0..1 relative progress or seconds within scene
+  timestamp: number; 
   action: "enter" | "highlight" | "connect" | "transform" | "exit";
   targetId: string;
   description?: string;
@@ -62,7 +57,7 @@ export interface VisualPrimitive {
   type: string;
   label?: string;
   detail?: string;
-  x?: number; // 0..1 relative position
+  x?: number; 
   y?: number;
   width?: number;
   height?: number;
@@ -71,8 +66,6 @@ export interface VisualPrimitive {
   modelType?: ThreeDModelType;
   metadata?: Record<string, any>;
 }
-
-// --- Canvas Freehand Drawing Primitives ---
 
 export interface Point {
   x: number;
@@ -160,7 +153,7 @@ export type CanvasElement =
 
 export interface SubFrameBeat {
   id: string;
-  timestamp: number; // 0..1 progress relative to scene duration
+  timestamp: number; 
   title?: string;
   detail?: string;
   imageUrl?: string;
@@ -173,11 +166,11 @@ export interface ScenePlan {
   title: string;
   purpose: string;
   narration: string;
-  duration: number; // seconds
+  duration: number; 
   rendererType: RendererType;
-  customImageUrl?: string; // Web image source or uploaded data URL
-  customVideoUrl?: string; // Web video source
-  subFrameBeats?: SubFrameBeat[]; // Multi-frame beats per scene
+  customImageUrl?: string; 
+  customVideoUrl?: string; 
+  subFrameBeats?: SubFrameBeat[]; 
   visualLanguage: {
     theme: string;
     primaryColor: string;
@@ -187,7 +180,7 @@ export interface ScenePlan {
   visualPrimitives: VisualPrimitive[];
   animationBeats: AnimationBeat[];
   cameraMotion?: "static" | "pan-right" | "zoom-in" | "zoom-out";
-  // Freehand elements added by user overlay
+  
   overlayElements?: CanvasElement[];
   boardStyle?: BoardStyle;
   thumbnail?: string;
@@ -207,11 +200,8 @@ export interface VideoProject {
   updatedAt: string;
 }
 
-// Backward compatibility alias: Scene = ScenePlan, Project = VideoProject
 export type Scene = ScenePlan;
 export type Project = VideoProject;
-
-// --- Pipeline Execution Types ---
 
 export type PipelineStage =
   | "idle"
@@ -228,7 +218,7 @@ export type PipelineStage =
 
 export interface PipelineState {
   stage: PipelineStage;
-  progress: number; // 0-100
+  progress: number; 
   currentScene: number;
   totalScenes: number;
   message: string;

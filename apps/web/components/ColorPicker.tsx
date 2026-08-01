@@ -28,7 +28,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         />
       ))}
 
-      {/* Custom color input */}
+      {}
       <label className="relative cursor-pointer">
         <div
           className={`w-5 h-5 rounded-full border-2 border-dashed border-slate-600 hover:border-slate-400 transition-all flex items-center justify-center text-[8px] text-slate-500 overflow-hidden`}

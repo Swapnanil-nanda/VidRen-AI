@@ -1,7 +1,3 @@
-// ============================================================
-// ML / Keyword Image Relevance Verification Engine
-// Integrates Keyword Verification Engine to validate image inputs.
-// ============================================================
 
 import { verifyImageInput, generateVerificationKeywords } from "./keywordVerificationEngine";
 

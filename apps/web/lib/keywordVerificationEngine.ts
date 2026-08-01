@@ -1,8 +1,3 @@
-// ============================================================
-// ML / Keyword Verification & Feature Extraction Engine
-// Automatically generates domain verification keywords & exclusion lists
-// for validating all image inputs before merging into video generation.
-// ============================================================
 
 export interface ImageVerificationResult {
   isVerified: boolean;
@@ -18,13 +13,9 @@ export interface TopicKeywordProfile {
   conceptTags: string[];
 }
 
-/**
- * Dynamically generates keyword verification profiles from user input prompt & scene script.
- */
 export function generateVerificationKeywords(prompt: string, title: string, narration: string): TopicKeywordProfile {
   const combinedText = `${prompt} ${title} ${narration}`.toLowerCase();
 
-  // 1. History & French Revolution Profile
   if (
     combinedText.includes("french") ||
     combinedText.includes("revolution") ||
@@ -50,7 +41,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
     };
   }
 
-  // 2. Health & WHO / Medical Profile
   if (
     combinedText.includes("health") ||
     combinedText.includes("family") ||
@@ -70,7 +60,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
     };
   }
 
-  // 3. Quantum Physics Profile
   if (
     combinedText.includes("quantum") ||
     combinedText.includes("entangle") ||
@@ -87,7 +76,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
     };
   }
 
-  // 4. Biology & DNA Profile
   if (
     combinedText.includes("dna") ||
     combinedText.includes("bio") ||
@@ -103,7 +91,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
     };
   }
 
-  // 5. AI & Computer Science Profile
   if (
     combinedText.includes("ai") ||
     combinedText.includes("neural") ||
@@ -120,7 +107,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
     };
   }
 
-  // General Fallback Profile
   return {
     domain: "general",
     requiredKeywords: ["educational", "diagram", "graphic", "illustration", "learning", "science"],
@@ -129,11 +115,6 @@ export function generateVerificationKeywords(prompt: string, title: string, narr
   };
 }
 
-/**
- * Image Input Verification Pipeline:
- * Validates an image URL against generated keyword profiles.
- * Returns verification status, confidence score, and matched tags.
- */
 export function verifyImageInput(
   imageUrl: string | null,
   prompt: string,
@@ -152,7 +133,6 @@ export function verifyImageInput(
   const profile = generateVerificationKeywords(prompt, title, narration);
   const lowerUrl = imageUrl.toLowerCase();
 
-  // 1. Check for Excluded / Blacklisted Keywords
   for (const excluded of profile.excludedKeywords) {
     if (lowerUrl.includes(excluded)) {
       return {
@@ -164,7 +144,6 @@ export function verifyImageInput(
     }
   }
 
-  // 2. Calculate Confidence Score based on Required Keyword Matches
   const matched: string[] = [];
   for (const req of profile.requiredKeywords) {
     if (lowerUrl.includes(req)) {
@@ -172,7 +151,6 @@ export function verifyImageInput(
     }
   }
 
-  // Always grant high confidence for verified direct CDN assets & Wikimedia Commons
   if (lowerUrl.includes("wikimedia.org") || lowerUrl.includes("unsplash.com") || lowerUrl.includes("pollinations.ai")) {
     matched.push("verified-cdn");
   }

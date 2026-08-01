@@ -42,7 +42,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const animFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
 
-  // Resize listener for crisp retina canvas
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -71,7 +70,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     return () => resizeObserver.disconnect();
   }, []);
 
-  // Compute current scene and timestamp from global currentTime
   const getCurrentSceneAndTimestamp = useCallback(
     (t: number) => {
       let accumulated = 0;
@@ -94,7 +92,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     [scenesList]
   );
 
-  // Live Canvas Rendering Frame Loop (60 FPS fluid rendering)
   const renderFrame = useCallback(
     (t: number) => {
       const canvas = canvasRef.current;
@@ -121,7 +118,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     [scenesList, getCurrentSceneAndTimestamp]
   );
 
-  // Animation Loop for live playback
   useEffect(() => {
     let active = true;
 
@@ -141,7 +137,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             lastTimeRef.current = 0;
             return totalDuration;
           }
-          // Continuous linear script speech narration (NO per-scene restarts or audio pauses!)
+          
           const masterScript = buildLinearMasterScript(scenesList, project?.prompt || "");
           const { sceneIndex } = getCurrentSceneAndTimestamp(nextTime);
           if (sceneIndex !== activeSceneIndexRef.current) {
@@ -245,8 +241,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10"
         style={{ background: "#09090B" }}
       >
-        {/* Live 60 FPS HTML5 Canvas Viewport */}
-        {/* Zoom Controls Overlay (Top-Right) */}
+        {}
+        {}
         <div className="absolute top-3 right-3 z-30 flex items-center gap-1 bg-black/60 backdrop-blur-md p-1 rounded-lg border border-white/10">
           <button
             onClick={() => setZoomLevel((z) => Math.max(0.75, Math.round((z - 0.25) * 100) / 100))}
@@ -284,7 +280,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           />
         </div>
 
-        {/* Big Center Play Overlay Button */}
+        {}
         {!isPlaying && (
           <div
             className="absolute inset-0 flex items-center justify-center cursor-pointer z-20 bg-black/30 backdrop-blur-[2px]"
@@ -302,14 +298,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </div>
         )}
 
-        {/* Bottom Controls Bar */}
+        {}
         <div
           className="absolute bottom-0 left-0 right-0 px-4 py-3 z-30"
           style={{
             background: "linear-gradient(transparent, rgba(9, 9, 11, 0.95))",
           }}
         >
-          {/* Progress Timeline Slider */}
+          {}
           <div className="relative group mb-3">
             <div
               className="h-1.5 rounded-full overflow-hidden cursor-pointer"
@@ -334,7 +330,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               style={{ height: "16px", top: "-6px" }}
             />
 
-            {/* Scene Markers on Timeline */}
+            {}
             {narrationSegments.map((seg, i) => {
               const pos = totalDuration > 0 ? (seg.startTime / totalDuration) * 100 : 0;
               return (
@@ -368,7 +364,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 {formatTime(currentTime)} / {formatTime(totalDuration)}
               </span>
 
-              {/* Soundbar / Volume Slider */}
+              {}
               <div className="flex items-center gap-2 border-l border-white/10 pl-3 ml-1">
                 <button
                   onClick={() => {

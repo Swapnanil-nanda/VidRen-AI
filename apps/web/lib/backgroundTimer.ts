@@ -1,8 +1,3 @@
-// ============================================================
-// Un-throttled Web Worker Background Timer
-// Browser tab timers (setTimeout/setInterval) throttle to 1000ms in background tabs.
-// Web Workers run on an isolated background OS thread and are NOT throttled by page visibility!
-// ============================================================
 
 const workerBlobCode = `
   const activeTimers = new Map();
@@ -60,9 +55,6 @@ function getWorker(): Worker | null {
   return workerInstance;
 }
 
-/**
-  Un-throttled sleep that executes reliably at full speed even if the tab/window is minimized or in the background.
- */
 export function backgroundSleep(ms: number): Promise<void> {
   const worker = getWorker();
   if (!worker) {
@@ -76,9 +68,6 @@ export function backgroundSleep(ms: number): Promise<void> {
   });
 }
 
-/**
-  Un-throttled interval timer running in Web Worker thread.
- */
 export function backgroundInterval(callback: () => void, ms: number): () => void {
   const worker = getWorker();
   const id = ++timerIdCounter;

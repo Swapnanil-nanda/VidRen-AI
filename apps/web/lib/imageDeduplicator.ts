@@ -1,13 +1,7 @@
-// ============================================================
-// Image Hash & Entropy Deduplication Algorithm
-// Ensures EVERY background image URL across all scenes in a project is 100% UNIQUE.
-// Tracks image hashes, URL signatures, and prevents duplicate background images!
-// ============================================================
 
 import { ScenePlan } from "../types";
 import { getAIImageUrl, generateCinematicPrompt } from "./imageGenerator";
 
-/** Hash string helper */
 function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -25,7 +19,6 @@ export function deduplicateAndEnrichImages(scenes: ScenePlan[], prompt: string):
     const title = scene.title || `Scene ${sceneNumber}`;
     const purpose = scene.purpose || "";
 
-    // Generate 3 unique image URLs per scene
     const uniqueImages: string[] = [];
 
     for (let imgIdx = 0; imgIdx < 3; imgIdx++) {
@@ -35,7 +28,6 @@ export function deduplicateAndEnrichImages(scenes: ScenePlan[], prompt: string):
       let aiPrompt = generateCinematicPrompt(title, purpose, aspect, sceneNumber);
       let url = getAIImageUrl(aiPrompt, seed);
 
-      // If URL was already used in a previous scene, mutate the seed until it is completely unique!
       let retryCount = 0;
       while (globalUsedUrls.has(url) && retryCount < 20) {
         seed += 997 + retryCount * 31;
@@ -48,7 +40,6 @@ export function deduplicateAndEnrichImages(scenes: ScenePlan[], prompt: string):
       uniqueImages.push(url);
     }
 
-    // Attach custom image URL if requested, or keep the unique primary image
     return {
       ...scene,
       customImageUrl: scene.customImageUrl && !globalUsedUrls.has(scene.customImageUrl) ? scene.customImageUrl : uniqueImages[0],

@@ -4,10 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-/* ═══════════════════════════════════════════════ */
-/*  VidRen AI — Design System                     */
-/* ═══════════════════════════════════════════════ */
-
 :root {
   --bg-primary: #09090B;
   --bg-card: #111113;
@@ -58,7 +54,6 @@
   }
 }
 
-/* ═══ Scrollbar ═══ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -74,7 +69,6 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* ═══ Typography Scale ═══ */
 .text-display {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
@@ -110,7 +104,6 @@
   color: var(--text-tertiary);
 }
 
-/* ═══ Landing Page Utilities ═══ */
 .landing-section {
   padding: 6rem 1.5rem;
 }
@@ -133,13 +126,11 @@
   margin-right: auto;
 }
 
-/* Subtle separator */
 .separator {
   height: 1px;
   background: var(--border-subtle);
 }
 
-/* Card base */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -151,7 +142,6 @@
   border-color: var(--border-medium);
 }
 
-/* Button base */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -201,7 +191,6 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* ═══ Animations ═══ */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -271,7 +260,6 @@
   animation: float 4s ease-in-out infinite;
 }
 
-/* Stagger delays */
 .delay-1 { animation-delay: 0.1s; }
 .delay-2 { animation-delay: 0.2s; }
 .delay-3 { animation-delay: 0.3s; }
@@ -279,7 +267,6 @@
 .delay-5 { animation-delay: 0.5s; }
 .delay-6 { animation-delay: 0.6s; }
 
-/* ═══ Gradient text utility ═══ */
 .gradient-text {
   background: linear-gradient(135deg, #6366F1, #8B5CF6, #A78BFA);
   -webkit-background-clip: text;
@@ -294,7 +281,6 @@
   background-clip: text;
 }
 
-/* ═══ Browser Chrome ═══ */
 .browser-chrome {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -321,7 +307,6 @@
   margin-right: 6px;
 }
 
-/* ═══ Board Background Textures (Studio) ═══ */
 .board-blackboard {
   background-color: #1a1a2e;
   background-image:
@@ -338,7 +323,6 @@
   background-color: #f8f9fa;
 }
 
-/* ═══ Canvas Interaction Styles (Studio) ═══ */
 .canvas-container {
   touch-action: none;
   -webkit-touch-callout: none;
@@ -346,7 +330,6 @@
   user-select: none;
 }
 
-/* ═══ Studio glassmorphism utilities ═══ */
 .glass {
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(20px);
@@ -361,7 +344,6 @@
   border: 1px solid rgba(148, 163, 184, 0.08);
 }
 
-/* ═══ Studio glow effects ═══ */
 .glow-sky {
   box-shadow:
     0 0 20px rgba(56, 189, 248, 0.1),

@@ -104,7 +104,7 @@ export const VideoFinalizerModal: React.FC<VideoFinalizerModalProps> = ({
             </div>
           </div>
 
-          {/* Resolution Selector */}
+          {}
           <div className="mb-6">
             <label className="block text-xs font-medium text-text-secondary mb-2">
               Select Resolution
@@ -127,7 +127,7 @@ export const VideoFinalizerModal: React.FC<VideoFinalizerModalProps> = ({
             </div>
           </div>
 
-          {/* Progress / Status Display */}
+          {}
           {isExporting && (
             <div className="mb-6 p-4 rounded-xl border border-indigo-500/20 bg-indigo-500/5 space-y-2">
               <div className="flex justify-between text-xs font-mono">
@@ -144,7 +144,7 @@ export const VideoFinalizerModal: React.FC<VideoFinalizerModalProps> = ({
             </div>
           )}
 
-          {/* Error Message */}
+          {}
           {errorMessage && (
             <div className="mb-6 p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-xs text-red-300 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -152,7 +152,7 @@ export const VideoFinalizerModal: React.FC<VideoFinalizerModalProps> = ({
             </div>
           )}
 
-          {/* Video Download Preview */}
+          {}
           {videoResult && (
             <div className="mb-6 space-y-3">
               <video

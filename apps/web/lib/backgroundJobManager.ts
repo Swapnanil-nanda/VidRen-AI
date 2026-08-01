@@ -1,8 +1,3 @@
-// ============================================================
-// Background Job & Video Result Storage Manager
-// Saves active video projects and finished video URLs to IndexedDB / localStorage
-// so users never lose rendering work if they switch tabs, close window, or return later.
-// ============================================================
 
 import { VideoProject } from "../types";
 import { NarrationSegment } from "./videoCompositor";

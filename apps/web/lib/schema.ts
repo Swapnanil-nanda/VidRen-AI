@@ -5,7 +5,6 @@ export function validateScenePlan(data: any, index: number): ScenePlan {
     throw new Error(`Scene ${index + 1} is not a valid object.`);
   }
 
-  // Map visualLayout ("process-flow", "hero-3d", etc.) to internal RendererType
   let layoutStr = String(data.visualLayout || data.rendererType || "process").toLowerCase();
   layoutStr = layoutStr.replace("-flow", "").replace("-", "");
 
@@ -31,7 +30,6 @@ export function validateScenePlan(data: any, index: number): ScenePlan {
     rendererType = "hero3d";
   }
 
-  // Visual Primitives mapping from foregroundElements if available
   let primitives = Array.isArray(data.visualPrimitives)
     ? data.visualPrimitives.map((vp: any, vIdx: number) => ({
         id: vp.id || `vp-${vIdx}`,
@@ -62,7 +60,6 @@ export function validateScenePlan(data: any, index: number): ScenePlan {
     }));
   }
 
-  // Camera Motion mapping
   let cameraMotion = data.cameraMotion || data.cameraMovement || "static";
   if (cameraMotion === "slow-push-in") cameraMotion = "zoom-in";
   else if (cameraMotion === "zoom-out") cameraMotion = "zoom-out";

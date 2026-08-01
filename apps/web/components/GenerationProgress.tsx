@@ -91,7 +91,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
       transition={{ duration: 0.4 }}
       className="w-full max-w-lg mx-auto"
     >
-      {/* Steps */}
+      {}
       <div className="space-y-1">
         {STAGES.map((s, i) => {
           const isComplete = i < activeIndex;
@@ -111,7 +111,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
                   : "transparent",
               }}
             >
-              {/* Status indicator */}
+              {}
               <div className="relative flex-shrink-0">
                 {isComplete ? (
                   <div className="w-6 h-6 rounded-full bg-emerald-500/15 flex items-center justify-center">
@@ -152,7 +152,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
                 )}
               </div>
 
-              {/* Icon */}
+              {}
               <span
                 style={{
                   color: isComplete
@@ -166,7 +166,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
                 {s.icon}
               </span>
 
-              {/* Label */}
+              {}
               <span
                 className="text-[13px] font-medium flex-1"
                 style={{
@@ -181,7 +181,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
                 {s.label}
               </span>
 
-              {/* Progress indicator for active step */}
+              {}
               {isActive && stage === "rendering" && totalScenes > 0 && (
                 <span className="text-[11px] font-mono text-text-tertiary">
                   {currentScene}/{totalScenes}
@@ -196,7 +196,7 @@ export const GenerationProgress: React.FC<GenerationProgressProps> = ({
         })}
       </div>
 
-      {/* Overall progress bar */}
+      {}
       <div className="mt-4 px-3">
         <div
           className="h-1 rounded-full overflow-hidden"

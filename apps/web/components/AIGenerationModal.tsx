@@ -44,7 +44,6 @@ export const AIGenerationModal: React.FC<AIGenerationModalProps> = ({
       return;
     }
 
-    // Step 0: 0% -> 25%
     setCurrentStep(0);
     setProgress(15);
 
@@ -90,11 +89,11 @@ export const AIGenerationModal: React.FC<AIGenerationModalProps> = ({
           transition={{ duration: 0.3 }}
           className="w-full max-w-lg p-6 rounded-2xl border border-sky-500/30 bg-slate-900/90 shadow-2xl shadow-sky-500/20 relative overflow-hidden"
         >
-          {/* Top Radial Glow */}
+          {}
           <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-cyan-500/20 blur-3xl pointer-events-none" />
 
-          {/* Header */}
+          {}
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-cyan-300 flex items-center justify-center text-slate-950 font-bold shadow-md shadow-sky-500/20">
               <Sparkles className="w-5 h-5" />
@@ -109,7 +108,7 @@ export const AIGenerationModal: React.FC<AIGenerationModalProps> = ({
             </div>
           </div>
 
-          {/* Progress Bar */}
+          {}
           <div className="space-y-2 mb-6">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Generating AI Video Assets</span>
@@ -124,7 +123,7 @@ export const AIGenerationModal: React.FC<AIGenerationModalProps> = ({
             </div>
           </div>
 
-          {/* Steps Progress Checklist */}
+          {}
           <div className="space-y-3">
             {steps.map((step, idx) => {
               const isDone = currentStep > idx || progress === 100;

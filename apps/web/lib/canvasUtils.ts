@@ -1,13 +1,6 @@
-// ============================================================
-// Canvas Drawing Utilities — Chalk Texture Rendering Engine
-// ============================================================
 
 import { Point, Stroke, BoardStyle, BOARD_CONFIGS } from "../types";
 
-/**
- * Draw a chalk-textured freehand stroke on a 2D canvas context.
- * Uses jittered sub-points to simulate grainy chalk/dust texture.
- */
 export function drawChalkStroke(
   ctx: CanvasRenderingContext2D,
   points: Point[],
@@ -24,7 +17,6 @@ export function drawChalkStroke(
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
-  // Main stroke path
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   for (let i = 1; i < points.length; i++) {
@@ -38,7 +30,6 @@ export function drawChalkStroke(
   ctx.lineTo(last.x, last.y);
   ctx.stroke();
 
-  // Chalk grain texture overlay (small dots along the stroke)
   ctx.globalAlpha = opacity * 0.3;
   for (let i = 0; i < points.length; i += 2) {
     const p = points[i];
@@ -54,9 +45,6 @@ export function drawChalkStroke(
   ctx.restore();
 }
 
-/**
- * Draw a highlighter stroke (semi-transparent, wide)
- */
 export function drawHighlighterStroke(
   ctx: CanvasRenderingContext2D,
   points: Point[],
@@ -81,9 +69,6 @@ export function drawHighlighterStroke(
   ctx.restore();
 }
 
-/**
- * Erase by drawing with destination-out composite
- */
 export function drawEraserStroke(
   ctx: CanvasRenderingContext2D,
   points: Point[],
@@ -107,9 +92,6 @@ export function drawEraserStroke(
   ctx.restore();
 }
 
-/**
- * Draw alignment grid on the background layer
- */
 export function drawGrid(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -137,9 +119,6 @@ export function drawGrid(
   ctx.restore();
 }
 
-/**
- * Draw ruled notebook lines
- */
 export function drawRuledLines(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -158,7 +137,6 @@ export function drawRuledLines(
     ctx.stroke();
   }
 
-  // Left margin line
   ctx.strokeStyle = "rgba(255,100,100,0.15)";
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -169,9 +147,6 @@ export function drawRuledLines(
   ctx.restore();
 }
 
-/**
- * Render all strokes in a scene onto a canvas
- */
 export function renderStrokes(
   ctx: CanvasRenderingContext2D,
   strokes: Stroke[]
@@ -191,9 +166,6 @@ export function renderStrokes(
   }
 }
 
-/**
- * Fill the background layer with the board style
- */
 export function fillBoardBackground(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -204,7 +176,6 @@ export function fillBoardBackground(
   ctx.fillStyle = config.bg;
   ctx.fillRect(0, 0, width, height);
 
-  // Add subtle vignette for blackboard/greenboard
   if (boardStyle !== "whiteboard") {
     const gradient = ctx.createRadialGradient(
       width / 2, height / 2, height * 0.2,
@@ -217,9 +188,6 @@ export function fillBoardBackground(
   }
 }
 
-/**
- * Export canvas as a data URL
- */
 export function canvasToDataURL(
   canvas: HTMLCanvasElement,
   format: "png" | "jpeg" = "png"
@@ -227,9 +195,6 @@ export function canvasToDataURL(
   return canvas.toDataURL(`image/${format}`);
 }
 
-/**
- * Generate a unique ID
- */
 export function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }

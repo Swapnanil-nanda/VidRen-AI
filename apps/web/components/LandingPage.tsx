@@ -8,9 +8,6 @@ interface LandingPageProps {
   onLaunchStudio: () => void;
 }
 
-/* ─────────────────────────────────────────────────────
-   Section: Animate-on-scroll wrapper
-   ───────────────────────────────────────────────────── */
 const FadeSection: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -32,12 +29,9 @@ const FadeSection: React.FC<{
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Subtle grid background
-   ───────────────────────────────────────────────────── */
 const GridBackground: React.FC = () => (
   <div className="fixed inset-0 pointer-events-none overflow-hidden">
-    {/* Very subtle radial glow at top center */}
+    {}
     <div
       className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px]"
       style={{
@@ -45,7 +39,7 @@ const GridBackground: React.FC = () => (
           "radial-gradient(ellipse at center, rgba(99, 102, 241, 0.06) 0%, transparent 70%)",
       }}
     />
-    {/* Faint dot grid */}
+    {}
     <div
       className="absolute inset-0 opacity-[0.025]"
       style={{
@@ -57,9 +51,6 @@ const GridBackground: React.FC = () => (
   </div>
 );
 
-/* ─────────────────────────────────────────────────────
-   Navigation
-   ───────────────────────────────────────────────────── */
 const Navigation: React.FC<{ onLaunchStudio: () => void }> = ({
   onLaunchStudio,
 }) => {
@@ -83,7 +74,7 @@ const Navigation: React.FC<{ onLaunchStudio: () => void }> = ({
       }}
     >
       <div className="landing-container-wide flex items-center justify-between h-16 px-6">
-        {/* Logo */}
+        {}
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -108,7 +99,7 @@ const Navigation: React.FC<{ onLaunchStudio: () => void }> = ({
           </span>
         </div>
 
-        {/* Center links */}
+        {}
         <div className="hidden md:flex items-center gap-8">
           {["Features", "How it works", "Pricing"].map((item) => (
             <a
@@ -121,7 +112,7 @@ const Navigation: React.FC<{ onLaunchStudio: () => void }> = ({
           ))}
         </div>
 
-        {/* Right */}
+        {}
         <div className="flex items-center gap-3">
           <button className="hidden sm:inline-flex text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-200 px-3 py-1.5">
             Sign in
@@ -139,16 +130,13 @@ const Navigation: React.FC<{ onLaunchStudio: () => void }> = ({
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Hero Section
-   ───────────────────────────────────────────────────── */
 const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
   onLaunchStudio,
 }) => {
   return (
     <section className="relative pt-40 pb-8 px-6">
       <div className="landing-container text-center">
-        {/* Announcement badge */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -171,7 +159,7 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
           </a>
         </motion.div>
 
-        {/* Headline */}
+        {}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -183,7 +171,7 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
           <span className="gradient-text">visual knowledge</span>
         </motion.h1>
 
-        {/* Subheadline */}
+        {}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -195,7 +183,7 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
           interactive visual experiences — powered by AI.
         </motion.p>
 
-        {/* CTA row */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -212,7 +200,7 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
           </button>
         </motion.div>
 
-        {/* Social proof */}
+        {}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -226,9 +214,6 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Product Preview (Browser Chrome)
-   ───────────────────────────────────────────────────── */
 const ProductPreview: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -246,7 +231,7 @@ const ProductPreview: React.FC = () => {
           style={{ y, scale, opacity }}
           className="browser-chrome"
         >
-          {/* Browser bar */}
+          {}
           <div className="browser-chrome-bar">
             <div className="flex items-center gap-1.5 mr-4">
               <span
@@ -275,11 +260,11 @@ const ProductPreview: React.FC = () => {
             </div>
           </div>
 
-          {/* Product screenshot */}
+          {}
           <div className="relative aspect-[16/9] bg-[#09090B] overflow-hidden">
-            {/* Studio mock */}
+            {}
             <div className="absolute inset-0 flex">
-              {/* Left sidebar */}
+              {}
               <div
                 className="w-64 h-full flex-shrink-0 flex flex-col"
                 style={{
@@ -287,7 +272,7 @@ const ProductPreview: React.FC = () => {
                   borderRight: "1px solid rgba(255,255,255,0.06)",
                 }}
               >
-                {/* Sidebar header */}
+                {}
                 <div
                   className="px-4 py-3 flex items-center gap-2"
                   style={{
@@ -317,7 +302,7 @@ const ProductPreview: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Scene items */}
+                {}
                 <div className="flex-1 p-2 space-y-1.5 overflow-hidden">
                   {[
                     { label: "Introduction", active: false },
@@ -362,7 +347,7 @@ const ProductPreview: React.FC = () => {
                           {scene.label}
                         </span>
                       </div>
-                      {/* Mini preview bar */}
+                      {}
                       <div
                         className="mt-2 h-12 rounded"
                         style={{
@@ -376,9 +361,9 @@ const ProductPreview: React.FC = () => {
                 </div>
               </div>
 
-              {/* Main canvas area */}
+              {}
               <div className="flex-1 flex flex-col">
-                {/* Top toolbar */}
+                {}
                 <div
                   className="h-11 flex items-center px-4 gap-3"
                   style={{
@@ -386,7 +371,7 @@ const ProductPreview: React.FC = () => {
                     background: "#0C0C0E",
                   }}
                 >
-                  {/* Tool icons */}
+                  {}
                   {["M12 19l7-7 3 3-7 7-3-3z", "M2 12l10 10", "M15 3l6 6"].map(
                     (_, i) => (
                       <div
@@ -416,7 +401,7 @@ const ProductPreview: React.FC = () => {
                     )
                   )}
                   <div className="w-px h-5 bg-[rgba(255,255,255,0.06)] mx-1" />
-                  {/* Color dots */}
+                  {}
                   {["#6366F1", "#F97316", "#22C55E", "#F43F5E"].map(
                     (color, i) => (
                       <div
@@ -435,21 +420,21 @@ const ProductPreview: React.FC = () => {
                   )}
                 </div>
 
-                {/* Canvas */}
+                {}
                 <div className="flex-1 relative bg-[#1a1a2e]">
-                  {/* Vignette */}
+                  {}
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.4))]" />
 
-                  {/* Mock content */}
+                  {}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    {/* 3D-looking helix */}
+                    {}
                     <svg
                       width="280"
                       height="200"
                       viewBox="0 0 280 200"
                       className="opacity-80"
                     >
-                      {/* Helix strands */}
+                      {}
                       <motion.path
                         d="M40 100 Q70 30 100 100 Q130 170 160 100 Q190 30 220 100 Q250 170 280 100"
                         stroke="#6366F1"
@@ -472,7 +457,7 @@ const ProductPreview: React.FC = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 2.5, delay: 0.7 }}
                       />
-                      {/* Connecting rungs */}
+                      {}
                       {[70, 100, 130, 160, 190, 220, 250].map((x, i) => (
                         <motion.line
                           key={i}
@@ -490,7 +475,7 @@ const ProductPreview: React.FC = () => {
                       ))}
                     </svg>
 
-                    {/* Label */}
+                    {}
                     <div className="absolute bottom-12 left-8">
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -515,7 +500,7 @@ const ProductPreview: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Bottom timeline */}
+                {}
                 <div
                   className="h-10 flex items-center px-4 gap-3"
                   style={{
@@ -549,9 +534,6 @@ const ProductPreview: React.FC = () => {
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Demo Section — Walkthrough
-   ───────────────────────────────────────────────────── */
 const DemoSection: React.FC = () => {
   const steps = [
     {
@@ -662,32 +644,32 @@ const DemoSection: React.FC = () => {
         </FadeSection>
 
         <div className="relative">
-          {/* Vertical line connecting steps (hidden on small screens) */}
+          {}
           <div className="hidden md:block absolute left-8 top-0 bottom-0 w-px" style={{ borderLeft: '2px dotted rgba(255,255,255,0.1)' }} />
 
           <div className="space-y-12">
             {steps.map((step, i) => (
               <FadeSection key={step.num} delay={i * 0.1} className="relative z-10">
                 <div className="flex flex-col md:flex-row gap-6 md:gap-12 items-start">
-                  {/* Step Indicator */}
+                  {}
                   <div className="flex-shrink-0 bg-[#09090B] p-2 rounded-full hidden md:block -ml-[22px]">
                     <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-mono text-sm">
                       {step.num}
                     </div>
                   </div>
                   
-                  {/* Mobile Step Indicator */}
+                  {}
                   <div className="md:hidden w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-mono text-xs mb-2">
                     {step.num}
                   </div>
 
-                  {/* Content */}
+                  {}
                   <div className="flex-1">
                     <h3 className="text-xl font-medium text-white mb-2">{step.title}</h3>
                     <p className="text-text-secondary text-sm mb-6">{step.desc}</p>
                   </div>
 
-                  {/* Preview Card */}
+                  {}
                   <div className="w-full md:w-[320px] h-[180px] bg-[#09090B] border border-white/[0.06] rounded-xl overflow-hidden shadow-2xl">
                     {step.preview}
                   </div>
@@ -701,9 +683,6 @@ const DemoSection: React.FC = () => {
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Features Section — 3 cards, minimal
-   ───────────────────────────────────────────────────── */
 const FeaturesSection: React.FC = () => {
   const features = [
     {
@@ -748,7 +727,7 @@ const FeaturesSection: React.FC = () => {
   return (
     <section id="features" className="landing-section">
       <div className="landing-container">
-        {/* Section header */}
+        {}
         <FadeSection className="text-center mb-16">
           <p className="text-caption uppercase tracking-widest mb-3 font-medium">
             How it works
@@ -758,7 +737,7 @@ const FeaturesSection: React.FC = () => {
           </h2>
         </FadeSection>
 
-        {/* Feature cards */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[rgba(255,255,255,0.06)] rounded-lg overflow-hidden">
           {features.map((feature, i) => (
             <FadeSection
@@ -766,7 +745,7 @@ const FeaturesSection: React.FC = () => {
               delay={i * 0.1}
               className="bg-[#09090B] p-8 md:p-10"
             >
-              {/* Icon */}
+              {}
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center mb-6"
                 style={{
@@ -778,17 +757,17 @@ const FeaturesSection: React.FC = () => {
                 {feature.icon}
               </div>
 
-              {/* Label */}
+              {}
               <p className="text-[12px] font-medium uppercase tracking-wider text-accent mb-2">
                 {feature.label}
               </p>
 
-              {/* Title */}
+              {}
               <h3 className="text-title text-text-primary mb-3">
                 {feature.title}
               </h3>
 
-              {/* Description */}
+              {}
               <p className="text-body text-[14px]">{feature.description}</p>
             </FadeSection>
           ))}
@@ -798,9 +777,6 @@ const FeaturesSection: React.FC = () => {
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Capabilities Section — Detailed features
-   ───────────────────────────────────────────────────── */
 const CapabilitiesSection: React.FC = () => {
   const capabilities = [
     {
@@ -864,9 +840,6 @@ const CapabilitiesSection: React.FC = () => {
   );
 };
 
-/* ─────────────────────────────────────────────────────
-   Bottom CTA — Clean and restrained
-   ───────────────────────────────────────────────────── */
 const BottomCTA: React.FC<{ onLaunchStudio: () => void }> = ({
   onLaunchStudio,
 }) => (
@@ -898,9 +871,6 @@ const BottomCTA: React.FC<{ onLaunchStudio: () => void }> = ({
   </section>
 );
 
-/* ─────────────────────────────────────────────────────
-   Footer — Minimalist
-   ───────────────────────────────────────────────────── */
 const Footer: React.FC = () => (
   <footer
     className="px-6 py-8"
@@ -945,9 +915,6 @@ const Footer: React.FC = () => (
   </footer>
 );
 
-/* ─────────────────────────────────────────────────────
-   Main Landing Page Export
-   ───────────────────────────────────────────────────── */
 export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchStudio }) => {
   return (
     <div className="min-h-screen bg-[#09090B] text-white overflow-x-hidden overflow-y-auto">

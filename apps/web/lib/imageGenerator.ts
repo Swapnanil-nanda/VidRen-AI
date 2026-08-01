@@ -13,8 +13,6 @@ export function generateCinematicPrompt(title: string, purpose: string, aspect?:
   return `cinematic educational visual, ${aspect || 'wide shot'}, high contrast dark mode, ${title} ${purpose}`;
 }
 
-// 100% High-Availability Direct CDN & Wikimedia Commons Photo Presets
-// Guaranteed 0ms latency, zero CORS blocking, zero rate limits!
 const FAILSAFE_TOPIC_PHOTOS: Record<string, string[]> = {
   french: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Prise_de_la_Bastille.jpg/1280px-Prise_de_la_Bastille.jpg",

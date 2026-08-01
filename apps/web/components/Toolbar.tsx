@@ -96,7 +96,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <div className="flex h-12 w-full items-center justify-between border-b border-slate-800/80 bg-slate-900/95 px-3 backdrop-blur-xl shrink-0 select-none z-50">
       <div className="flex items-center gap-1.5 h-full overflow-x-auto no-scrollbar py-2">
-        {/* Brand */}
+        {}
         <div className="flex items-center gap-2 mr-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-cyan-300 shadow-inner text-slate-950 font-bold">
             <span className="text-sm">✍</span>
@@ -108,7 +108,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800 hidden sm:block" />
 
-        {/* Board Style */}
+        {}
         <div className="hidden sm:flex items-center gap-1 bg-slate-950/50 p-0.5 rounded-lg border border-slate-800/50">
           {(["blackboard", "greenboard", "whiteboard"] as BoardStyle[]).map((style) => (
             <button
@@ -128,7 +128,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800 hidden sm:block" />
 
-        {/* Drawing Tools */}
+        {}
         <div className="flex items-center gap-1">
           {tools.map(({ id, icon: Icon, title }) => (
             <button
@@ -149,7 +149,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800" />
 
-        {/* Brush Size */}
+        {}
         <div className="hidden md:flex items-center gap-2 px-1">
           <div className="w-4 flex justify-center">
             <div
@@ -169,7 +169,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800 hidden md:block" />
 
-        {/* Color Palette */}
+        {}
         <div className="hidden lg:flex items-center gap-1">
           {CHALK_COLORS.map((color) => (
             <button
@@ -185,9 +185,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </div>
       </div>
 
-      {/* Right Controls */}
+      {}
       <div className="flex items-center gap-2 shrink-0">
-        {/* Undo / Redo */}
+        {}
         <div className="flex items-center gap-0.5">
           <button
             onClick={onUndo}
@@ -209,7 +209,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800" />
 
-        {/* View Toggles */}
+        {}
         <div className="flex items-center gap-0.5">
           <button
             onClick={onToggleGrid}
@@ -235,7 +235,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-5 w-px bg-slate-800 hidden md:block" />
 
-        {/* Voiceover Selector */}
+        {}
         <div className="hidden md:flex items-center gap-1 px-2 py-1 bg-slate-950/50 rounded-lg border border-slate-800/50 text-xs">
           <Mic className="h-3.5 w-3.5 text-purple-400" />
           <select
@@ -250,7 +250,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           </select>
         </div>
 
-        {/* Export Button */}
+        {}
         <button
           onClick={onExport}
           className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-400 hover:from-sky-400 hover:to-cyan-300 px-3 py-1.5 text-xs font-bold text-slate-950 transition-all shadow-md shadow-sky-500/20"

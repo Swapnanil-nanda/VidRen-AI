@@ -9,8 +9,6 @@ export type RendererFunction = (
   config: RenderConfig
 ) => void;
 
-// --- Shared Helpers ---
-
 function drawRoundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -39,12 +37,10 @@ function drawWrappedText(ctx: CanvasRenderingContext2D, text: string, x: number,
   lines.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
 }
 
-/** Easing: smooth ease-out cubic */
 function easeOut(t: number): number {
   return 1 - Math.pow(1 - Math.min(Math.max(t, 0), 1), 3);
 }
 
-/** Returns 0→1 for when element at index `i` out of `total` should appear, given scene progress 0→1 */
 function elementVisibility(progress: number, index: number, total: number): number {
   const stagger = 0.6 / Math.max(total, 1);
   const start = index * stagger;
@@ -54,12 +50,9 @@ function elementVisibility(progress: number, index: number, total: number): numb
   return easeOut((progress - start) / (end - start));
 }
 
-/** Pulsing glow effect for the currently active element */
 function pulseAlpha(timestamp: number): number {
   return 0.6 + 0.4 * Math.sin(timestamp * 3);
 }
-
-// --- 1. Process Flow Renderer (Topic-Dynamic Nodes) ---
 
 export const renderProcessFlow: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
@@ -145,8 +138,6 @@ export const renderProcessFlow: RendererFunction = (ctx, scene, timestamp, durat
   });
 };
 
-// --- 2. Timeline Renderer (Topic-Dynamic Milestones) ---
-
 export const renderTimeline: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
   const cards = scene.visualPrimitives.length > 0 ? scene.visualPrimitives : [
@@ -224,8 +215,6 @@ export const renderTimeline: RendererFunction = (ctx, scene, timestamp, duration
   ctx.restore();
 };
 
-// --- 3. Comparison Renderer (Topic-Dynamic Comparison) ---
-
 export const renderComparison: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
   const prims = scene.visualPrimitives.filter((p) => p.type === "box" || p.type === "node");
@@ -295,8 +284,6 @@ export const renderComparison: RendererFunction = (ctx, scene, timestamp, durati
   }
 };
 
-// --- 4. Hierarchy Tree Renderer (Parent & Child Connected Boxes) ---
-
 export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
   const progress = Math.min(timestamp / duration, 1);
@@ -325,7 +312,6 @@ export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duratio
     ];
   }
 
-  // Draw Top Parent Box
   const parentVis = easeOut(Math.min(progress * 2.5, 1));
   const parentW = 320;
   const parentH = 65;
@@ -347,7 +333,6 @@ export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duratio
   ctx.fillText(parentTitle, width / 2, parentY + 38);
   ctx.restore();
 
-  // Draw Children Connected Boxes
   const childW = 190;
   const childH = 75;
   const startX = width * 0.12;
@@ -362,7 +347,6 @@ export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duratio
     ctx.save();
     ctx.globalAlpha = vis;
 
-    // Animated Branch Line from Parent to Child
     ctx.strokeStyle = scene.visualLanguage.primaryColor + "80";
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 4]);
@@ -373,7 +357,6 @@ export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duratio
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Child Box
     ctx.fillStyle = "rgba(15, 15, 20, 0.95)";
     ctx.strokeStyle = idx === 2 ? "#38BDF8" : "rgba(255, 255, 255, 0.15)";
     ctx.lineWidth = 1.5;
@@ -399,8 +382,6 @@ export const renderHierarchy: RendererFunction = (ctx, scene, timestamp, duratio
     ctx.restore();
   });
 };
-
-// --- 5. Pie Chart / Magnitude Distribution Renderer ---
 
 export const renderPieChart: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
@@ -435,7 +416,6 @@ export const renderPieChart: RendererFunction = (ctx, scene, timestamp, duration
 
   ctx.save();
 
-  // Animated Pie Slice Reveal
   let currentAngle = -Math.PI / 2;
   const revealPct = easeOut(progress);
 
@@ -457,20 +437,17 @@ export const renderPieChart: RendererFunction = (ctx, scene, timestamp, duration
     currentAngle = endAngle;
   });
 
-  // Inner Donut Hole
   ctx.beginPath();
   ctx.arc(cx, cy, radius * 0.5, 0, Math.PI * 2);
   ctx.fillStyle = "#09090B";
   ctx.fill();
 
-  // Donut Center Text
   ctx.fillStyle = "#FFFFFF";
   ctx.font = "bold 16px sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(centerText, cx, cy);
 
-  // Legend Cards (Right Side)
   const legendX = width * 0.62;
   slices.forEach((slice, idx) => {
     const vis = elementVisibility(progress, idx, slices.length);
@@ -504,8 +481,6 @@ export const renderPieChart: RendererFunction = (ctx, scene, timestamp, duration
 
   ctx.restore();
 };
-
-// --- 6. Equation / Core Principle Renderer ---
 
 export const renderEquation: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
@@ -590,8 +565,6 @@ export const renderEquation: RendererFunction = (ctx, scene, timestamp, duration
   ctx.restore();
 };
 
-// --- 7. Chart Renderer (Authentic Datasets from WHO, NFHS-5/6, History Census, CERN) ---
-
 export const renderChart: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
   const progress = Math.min(timestamp / duration, 1);
@@ -667,7 +640,6 @@ export const renderChart: RendererFunction = (ctx, scene, timestamp, duration, c
 
   ctx.save();
 
-  // Header Dataset Label Badge
   ctx.fillStyle = "rgba(99, 102, 241, 0.15)";
   ctx.strokeStyle = scene.visualLanguage.primaryColor || "#6366F1";
   ctx.lineWidth = 1;
@@ -680,7 +652,6 @@ export const renderChart: RendererFunction = (ctx, scene, timestamp, duration, c
   ctx.textAlign = "center";
   ctx.fillText(`DATASET: ${datasetHeader.toUpperCase()}`, width / 2, startY - 24);
 
-  // Bars
   bars.forEach((b, idx) => {
     const vis = elementVisibility(progress, idx, bars.length);
     if (vis <= 0) return;
@@ -707,8 +678,6 @@ export const renderChart: RendererFunction = (ctx, scene, timestamp, duration, c
 
   ctx.restore();
 };
-
-// --- 8. Simulation Renderer ---
 
 export const renderSimulation: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
@@ -752,8 +721,6 @@ export const renderSimulation: RendererFunction = (ctx, scene, timestamp, durati
   ctx.restore();
 };
 
-// --- 9. Hero 3D Renderer ---
-
 export const renderHero3D: RendererFunction = (ctx, scene, timestamp, duration, config) => {
   const { width, height } = config;
   const lower = (scene.title + " " + (scene.purpose || "")).toLowerCase();
@@ -788,7 +755,6 @@ export const renderHero3D: RendererFunction = (ctx, scene, timestamp, duration, 
     const lblVis = elementVisibility(progress, idx, labels.length);
     if (lblVis <= 0) return;
 
-    // Stationary side column layout (NO rotating circles!)
     const isLeft = idx % 2 === 0;
     const row = Math.floor(idx / 2);
     const lx = isLeft ? width * 0.18 : width * 0.82;
@@ -811,8 +777,6 @@ export const renderHero3D: RendererFunction = (ctx, scene, timestamp, duration, 
 
   ctx.restore();
 };
-
-// --- Renderer Registry Mapping ---
 
 export const RENDERER_REGISTRY: Record<string, RendererFunction> = {
   process: renderProcessFlow,

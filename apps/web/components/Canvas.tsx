@@ -62,7 +62,6 @@ export function Canvas({
   const [currentStroke, setCurrentStroke] = useState<ActiveStroke | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Handle resizing
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -90,7 +89,6 @@ export function Canvas({
     return () => resizeObserver.disconnect();
   }, []);
 
-  // Render canvas frame
   const renderCanvasFrame = useCallback(
     (timestamp: number) => {
       const canvas = canvasRef.current;
@@ -103,7 +101,6 @@ export function Canvas({
 
       ctx.clearRect(0, 0, width, height);
 
-      // 1. If scenePlan is provided, render using modular AI SceneRenderer
       if (scenePlan) {
         const frameRenderer = createFrameRenderer(scenePlan, {
           width,
@@ -115,14 +112,13 @@ export function Canvas({
         const sceneTime = currentTime % duration;
         frameRenderer(ctx, sceneTime, duration);
       } else {
-        // Fallback Board Background
+        
         fillBoardBackground(ctx, width, height, boardStyle);
         const config = BOARD_CONFIGS[boardStyle];
         if (showGrid) drawGrid(ctx, width, height, 40, config.gridColor);
         if (showRuledLines) drawRuledLines(ctx, width, height, config.gridColor);
       }
 
-      // 2. Render Saved Overlay Hand-Drawn Strokes
       const strokes: Stroke[] = [];
       for (const el of elements) {
         if (el.kind === "stroke") {
@@ -131,14 +127,12 @@ export function Canvas({
       }
       renderStrokes(ctx, strokes);
 
-      // 3. Render 3D Animated Objects from elements array
       for (const el of elements) {
         if (el.kind === "3d-object") {
           render3DModel(ctx, el, timestamp);
         }
       }
 
-      // 4. Render Active In-Progress Freehand Stroke
       if (currentStroke && currentStroke.points.length > 1) {
         if (currentStroke.tool === "pen") {
           drawChalkStroke(ctx, currentStroke.points, currentStroke.color, currentStroke.width);
@@ -152,7 +146,6 @@ export function Canvas({
     [scenePlan, boardStyle, showGrid, showRuledLines, elements, currentStroke, currentTime]
   );
 
-  // Animation Loop for 3D Objects & Frame Updates
   useEffect(() => {
     let active = true;
 
