@@ -296,7 +296,7 @@ export interface GeneratorSettings {
 export const DEFAULT_GENERATOR_SETTINGS: GeneratorSettings = {
   llmProvider: "gemini",
   ttsProvider: "browser",
-  voiceOption: "nova",
+  voiceOption: "fable",
   resolution: "1080p",
   videoStyle: "modern",
   targetDuration: "standard",
@@ -387,7 +387,7 @@ export function createDefaultProject(title: string = "Untitled Video"): VideoPro
     audienceLevel: "intermediate",
     scenes: [createEmptyScenePlan(0)],
     aspectRatio: "16:9",
-    voiceover: "nova",
+    voiceover: "fable",
     bgMusic: "none",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

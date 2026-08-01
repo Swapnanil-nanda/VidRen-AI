@@ -17,7 +17,7 @@ export function getGroqApiKey(): string | null {
   return process.env.NEXT_PUBLIC_GROQ_API_KEY || null;
 }
 
-const HISTORICAL_CURRICULUM = [
+export const HISTORICAL_CURRICULUM = [
   { title: "The Ancien Régime & Absolute Monarchy", purpose: "Feudal structure of 18th century France", narration: "Under King Louis XVI, French society was rigidly divided into Three Estates, creating massive social inequality and financial strain.", renderer: "hierarchy" as RendererType },
   { title: "Financial Collapse & Tax Inequality", purpose: "Economic crisis of 1788-1789", narration: "Compounded by war debts and crop failures, the peasantry bore the heaviest tax burden while nobility and clergy enjoyed exemptions.", renderer: "chart" as RendererType },
   { title: "Convocation of the Estates-General", purpose: "May 5, 1789 assembly at Versailles", narration: "Louis XVI summoned representatives of all three estates for the first time in 175 years to resolve the fiscal emergency.", renderer: "hierarchy" as RendererType },

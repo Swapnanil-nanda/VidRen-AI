@@ -2,8 +2,11 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { ArrowRight, Play, ChevronRight, User, Sparkles } from "lucide-react";
+import { ArrowRight, Play, Pause, ChevronRight, User, Sparkles, Film, Layers, Volume2, ShieldCheck, Zap } from "lucide-react";
 import { AuthModal } from "./AuthModal";
+import { speakNarration, stopNarration, initSpeechSynthesis } from "../lib/speechSynthesis";
+import { createFrameRenderer } from "../lib/sceneRenderer";
+import { HISTORICAL_CURRICULUM } from "../lib/aiPlanner";
 
 interface LandingPageProps {
   onLaunchStudio: () => void;
@@ -99,7 +102,7 @@ const Navigation: React.FC<{ onLaunchStudio: () => void; onOpenAuth: () => void 
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          {["Features", "How it works"].map((item) => (
+          {["Demo", "Process", "Features"].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
@@ -131,8 +134,9 @@ const Navigation: React.FC<{ onLaunchStudio: () => void; onOpenAuth: () => void 
   );
 };
 
-const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
+const HeroSection: React.FC<{ onLaunchStudio: () => void; onTriggerDemo: () => void }> = ({
   onLaunchStudio,
+  onTriggerDemo,
 }) => {
   return (
     <section className="relative pt-40 pb-8 px-6">
@@ -143,7 +147,7 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <a
-            href="#features"
+            href="#demo"
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors duration-200"
             style={{
               border: "1px solid rgba(255,255,255,0.06)",
@@ -191,8 +195,8 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
             Start creating
             <ArrowRight className="w-4 h-4" />
           </button>
-          <button onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })} className="btn-secondary px-5 py-3">
-            <Play className="w-3.5 h-3.5" />
+          <button onClick={onTriggerDemo} className="btn-secondary px-5 py-3 shadow-lg shadow-indigo-500/10">
+            <Play className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400" />
             Watch demo
           </button>
         </motion.div>
@@ -201,31 +205,169 @@ const HeroSection: React.FC<{ onLaunchStudio: () => void }> = ({
   );
 };
 
-const ProductPreview: React.FC = () => {
+const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: () => void }> = ({
+  isPlaying,
+  onTogglePlay,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [sceneIdx, setSceneIdx] = useState(0);
+
+  const scenes = HISTORICAL_CURRICULUM.slice(0, 6);
+  const currentScene = scenes[sceneIdx % scenes.length];
+
+  useEffect(() => {
+    let animFrame: number;
+    let startTime = performance.now();
+
+    const render = (now: number) => {
+      const canvas = canvasRef.current;
+      if (canvas && currentScene) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const width = canvas.width;
+          const height = canvas.height;
+          const elapsed = (now - startTime) / 1000;
+          const duration = (currentScene as any).duration || 10;
+
+          if (elapsed >= duration && isPlaying) {
+            startTime = now;
+            setSceneIdx((prev) => (prev + 1) % scenes.length);
+          }
+
+          ctx.clearRect(0, 0, width, height);
+          const frameRenderer = createFrameRenderer(currentScene as any, {
+            width,
+            height,
+            fps: 60,
+            style: "modern",
+          });
+          frameRenderer(ctx, elapsed % duration, duration);
+        }
+      }
+      if (isPlaying) {
+        animFrame = requestAnimationFrame(render);
+      }
+    };
+
+    if (isPlaying) {
+      initSpeechSynthesis();
+      speakNarration(currentScene.narration, "fable", false, 0.95, 1.0); // British Narrator (fable)
+      animFrame = requestAnimationFrame(render);
+    } else {
+      stopNarration();
+      const canvas = canvasRef.current;
+      if (canvas && currentScene) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const frameRenderer = createFrameRenderer(currentScene as any, {
+            width: canvas.width,
+            height: canvas.height,
+            fps: 60,
+            style: "modern",
+          });
+          frameRenderer(ctx, 3, 10);
+        }
+      }
+    }
+
+    return () => {
+      if (animFrame) cancelAnimationFrame(animFrame);
+    };
+  }, [isPlaying, sceneIdx, currentScene]);
+
   return (
-    <section className="relative pt-12 pb-24 px-6 overflow-hidden">
+    <div id="demo" className="relative rounded-2xl p-2 border border-white/10 bg-white/[0.02] shadow-2xl overflow-hidden">
+      <div className="relative aspect-video rounded-xl overflow-hidden bg-[#09090B] border border-white/5 group">
+        <canvas
+          ref={canvasRef}
+          width={1280}
+          height={720}
+          className="w-full h-full object-cover"
+        />
+
+        {/* Demo Overlay Banner */}
+        <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-xs font-medium text-white">
+          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+          <span>French Revolution Demo Video (British Voice)</span>
+        </div>
+
+        {/* Play / Pause Controls Button */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-all pointer-events-none">
+          <button
+            onClick={onTogglePlay}
+            className="pointer-events-auto w-16 h-16 rounded-full bg-indigo-600/90 hover:bg-indigo-500 text-white flex items-center justify-center shadow-2xl transition-all scale-95 group-hover:scale-100"
+          >
+            {isPlaying ? (
+              <Pause className="w-7 h-7 fill-white" />
+            ) : (
+              <Play className="w-7 h-7 fill-white ml-1" />
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProcessStepSection: React.FC = () => {
+  const steps = [
+    {
+      step: "01",
+      title: "Input your topic or prompt",
+      description: "Enter any research paper, medical standard, deep neural net formula, or historical event.",
+      icon: <Sparkles className="w-5 h-5 text-indigo-400" />,
+    },
+    {
+      step: "02",
+      title: "AI scene decomposition",
+      description: "Our multi-agent engine plans 5 to 25 structured scenes with customized vector graphics.",
+      icon: <Layers className="w-5 h-5 text-cyan-400" />,
+    },
+    {
+      step: "03",
+      title: "Continuous British voice narration",
+      description: "Generates continuous linear documentary voiceover with humanized speech pacing.",
+      icon: <Volume2 className="w-5 h-5 text-emerald-400" />,
+    },
+    {
+      step: "04",
+      title: "Export & share video",
+      description: "Download 60FPS WebM video, animated GIF, or edit frames on the interactive canvas.",
+      icon: <Film className="w-5 h-5 text-amber-400" />,
+    },
+  ];
+
+  return (
+    <section id="process" className="landing-section">
       <div className="landing-container">
-        <div
-          className="relative rounded-2xl p-2"
-          style={{
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.02)",
-          }}
-        >
-          <div className="rounded-xl overflow-hidden bg-[#09090B] aspect-video relative flex items-center justify-center border border-white/5 shadow-2xl">
-            <div className="text-center p-8">
-              <div
-                className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-                style={{ background: "var(--accent-gradient)" }}
-              >
-                <Sparkles className="w-8 h-8 text-white" />
+        <FadeSection className="text-center mb-16">
+          <p className="text-caption uppercase tracking-widest mb-3 font-medium text-accent">
+            Step-by-Step Process
+          </p>
+          <h2 className="text-headline gradient-text-subtle">
+            How VidRen AI turns prompts into visual lessons
+          </h2>
+        </FadeSection>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((s, idx) => (
+            <FadeSection key={s.step} delay={idx * 0.1}>
+              <div className="card p-6 h-full border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-mono font-bold text-indigo-400 px-2.5 py-1 rounded bg-indigo-500/10 border border-indigo-500/20">
+                    STEP {s.step}
+                  </span>
+                  {s.icon}
+                </div>
+                <h3 className="text-title text-base font-semibold text-white mb-2">
+                  {s.title}
+                </h3>
+                <p className="text-body text-xs text-text-tertiary leading-relaxed">
+                  {s.description}
+                </p>
               </div>
-              <h3 className="text-title text-xl text-white mb-2">Interactive AI Video Canvas</h3>
-              <p className="text-body text-xs max-w-sm mx-auto">
-                Generates 60FPS motion graphics, WHO/NFHS data charts, and continuous linear voice narration.
-              </p>
-            </div>
-          </div>
+            </FadeSection>
+          ))}
         </div>
       </div>
     </section>
@@ -245,9 +387,9 @@ const CapabilitiesSection: React.FC = () => {
         "Procedurally generated 3D wireframe models — DNA helixes, Bloch spheres, neural networks — rendered smoothly.",
     },
     {
-      title: "Humanized AI voiceover",
+      title: "Humanized British AI Voice",
       description:
-        "Continuous linear narration with speech pacing, subtle filler transitions, and natural emphasis.",
+        "Default British narrator (fable) with speech pacing, subtle filler transitions, and natural emphasis.",
     },
     {
       title: "Multi-format export",
@@ -267,7 +409,7 @@ const CapabilitiesSection: React.FC = () => {
   ];
 
   return (
-    <section id="how-it-works" className="landing-section">
+    <section id="features" className="landing-section">
       <div className="landing-container">
         <FadeSection className="text-center mb-16">
           <p className="text-caption uppercase tracking-widest mb-3 font-medium">
@@ -372,13 +514,27 @@ const Footer: React.FC = () => (
 export const LandingPage: React.FC<LandingPageProps> = ({ onLaunchStudio }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string; avatar: string } | null>(null);
+  const [isPlayingDemo, setIsPlayingDemo] = useState(false);
+
+  const handleTriggerDemo = () => {
+    setIsPlayingDemo(true);
+    document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white overflow-x-hidden overflow-y-auto">
       <GridBackground />
       <Navigation onLaunchStudio={onLaunchStudio} onOpenAuth={() => setShowAuthModal(true)} />
-      <HeroSection onLaunchStudio={onLaunchStudio} />
-      <ProductPreview />
+      <HeroSection onLaunchStudio={onLaunchStudio} onTriggerDemo={handleTriggerDemo} />
+      
+      <div className="landing-container px-6">
+        <FrenchRevolutionDemoPlayer
+          isPlaying={isPlayingDemo}
+          onTogglePlay={() => setIsPlayingDemo((p) => !p)}
+        />
+      </div>
+
+      <ProcessStepSection />
       <div className="separator landing-container-wide" />
       <CapabilitiesSection />
       <BottomCTA onLaunchStudio={onLaunchStudio} />
