@@ -1,7 +1,6 @@
 import { ScenePlan, RenderConfig, BoardStyle } from "../types";
 import { RENDERER_REGISTRY, RendererFunction } from "./sceneRenderers";
 import { fillBoardBackground, renderStrokes } from "./canvasUtils";
-import { getSceneImage } from "./imageGenerator";
 
 export interface RenderedScene {
   canvas: HTMLCanvasElement;
@@ -126,22 +125,6 @@ export function createFrameRenderer(rawScene: ScenePlan, config: RenderConfig & 
       }
     } else {
       fillBoardBackground(ctx, width, height, activeBoardStyle);
-    }
-
-    // Topic Background Image with Ken Burns subtle animation
-    const bgImg = getSceneImage(scene.title, scene.purpose, scene.sceneNumber, 0, scene.customImageUrl);
-    if (bgImg && bgImg.complete && bgImg.naturalWidth > 0) {
-      ctx.save();
-      const kbScale = 1.04 + progress * 0.05;
-      const kbPanX = (progress - 0.5) * 16;
-      const kbPanY = (progress - 0.5) * 8;
-      ctx.translate(width / 2 + kbPanX, height / 2 + kbPanY);
-      ctx.scale(kbScale, kbScale);
-      ctx.translate(-width / 2, -height / 2);
-
-      ctx.globalAlpha = activeBoardStyle === "whiteboard" ? 0.12 : 0.28;
-      ctx.drawImage(bgImg, 0, 0, width, height);
-      ctx.restore();
     }
 
     if (activeBoardStyle === "blackboard") {
