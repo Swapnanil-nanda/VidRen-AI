@@ -40,26 +40,60 @@ const FAILSAFE_TOPIC_PHOTOS: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1280&q=80",
     "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1280&q=80",
     "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1280&q=80",
-  ]
+  ],
+  space: [
+    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1447433589675-4aaa569f3e05?auto=format&fit=crop&w=1280&q=80",
+  ],
+  history: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1280px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg",
+    "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1280&q=80",
+  ],
+  math: [
+    "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1280&q=80",
+  ],
+  nature: [
+    "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1280&q=80",
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1280&q=80",
+  ],
 };
 
-export function getSceneImage(title: string, purpose: string, sceneNumber: number = 1, index: number = 0): HTMLImageElement | null {
+export function getSceneImage(
+  title: string,
+  purpose: string,
+  sceneNumber: number = 1,
+  index: number = 0,
+  customUrl?: string
+): HTMLImageElement | null {
   if (typeof window === "undefined") return null;
 
-  const topicKey = title.toLowerCase().includes("french") || title.toLowerCase().includes("revolution") ? "french"
-    : title.toLowerCase().includes("health") || title.toLowerCase().includes("medical") ? "health"
-    : title.toLowerCase().includes("quantum") || title.toLowerCase().includes("physics") ? "quantum"
-    : "ai";
+  let rawUrl = customUrl;
 
-  const list = FAILSAFE_TOPIC_PHOTOS[topicKey] || FAILSAFE_TOPIC_PHOTOS.ai;
-  if (!list || list.length === 0) return null;
-  const safeIdx = Math.abs(Math.floor(Number(sceneNumber) || 1) + Math.floor(Number(index) || 0)) % list.length;
-  const rawUrl = list[safeIdx];
-  if (!rawUrl) return null;
+  if (!rawUrl) {
+    const text = `${title} ${purpose}`.toLowerCase();
+    const topicKey =
+      text.includes("french") || text.includes("revolution") || text.includes("bastille") || text.includes("napoleon") || text.includes("louis") ? "french"
+      : text.includes("health") || text.includes("medical") || text.includes("doctor") || text.includes("hospital") || text.includes("disease") || text.includes("vaccine") ? "health"
+      : text.includes("quantum") || text.includes("physics") || text.includes("wave") || text.includes("particle") || text.includes("schrodinger") ? "quantum"
+      : text.includes("space") || text.includes("astronomy") || text.includes("planet") || text.includes("galaxy") || text.includes("star") || text.includes("orbit") ? "space"
+      : text.includes("history") || text.includes("war") || text.includes("ancient") || text.includes("rome") || text.includes("empire") ? "history"
+      : text.includes("math") || text.includes("calculus") || text.includes("equation") || text.includes("geometry") ? "math"
+      : text.includes("nature") || text.includes("climate") || text.includes("earth") || text.includes("ocean") || text.includes("forest") ? "nature"
+      : "ai";
 
-  if (!verifyImageRelevance(rawUrl, title, topicKey)) {
-    return null;
+    const list = FAILSAFE_TOPIC_PHOTOS[topicKey] || FAILSAFE_TOPIC_PHOTOS.ai;
+    if (list && list.length > 0) {
+      const safeIdx = Math.abs(Math.floor(Number(sceneNumber) || 1) + Math.floor(Number(index) || 0)) % list.length;
+      rawUrl = list[safeIdx];
+    }
   }
+
+  if (!rawUrl) return null;
 
   if (imageCache.has(rawUrl)) {
     return imageCache.get(rawUrl)!;

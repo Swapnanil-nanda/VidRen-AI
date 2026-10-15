@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowRight, Play, Pause, ChevronRight, User, Sparkles, Film, Layers, Volume2, ShieldCheck, Zap } from "lucide-react";
 import { AuthModal } from "./AuthModal";
-import { speakNarration, stopNarration, initSpeechSynthesis } from "../lib/speechSynthesis";
+import { speakNarration, stopNarration, pauseNarration, resumeNarration, initSpeechSynthesis } from "../lib/speechSynthesis";
 import { createFrameRenderer } from "../lib/sceneRenderer";
 import { HISTORICAL_CURRICULUM } from "../lib/aiPlanner";
 
@@ -211,6 +211,8 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sceneIdx, setSceneIdx] = useState(0);
+  const elapsedRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
 
   const scenes = HISTORICAL_CURRICULUM.slice(0, 6).map((item, idx) => ({
     title: item.title,
@@ -230,10 +232,23 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
   }));
   const currentScene = scenes[sceneIdx % scenes.length];
 
+  // Whenever the scene index advances, start fresh audio for the new scene
+  useEffect(() => {
+    if (isPlaying) {
+      elapsedRef.current = 0;
+      lastTimeRef.current = null;
+      try {
+        initSpeechSynthesis();
+        speakNarration(currentScene.narration, "fable", false, 0.95, 1.0);
+      } catch (err) {
+        console.warn("Speech synthesis error on scene transition:", err);
+      }
+    }
+  }, [sceneIdx]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     let animFrame: number;
-    let startTime = performance.now();
 
     const render = (now: number) => {
       const canvas = canvasRef.current;
@@ -243,12 +258,21 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
           if (ctx) {
             const width = canvas.width;
             const height = canvas.height;
-            const elapsed = (now - startTime) / 1000;
             const duration = currentScene.duration || 10;
 
-            if (elapsed >= duration && isPlaying) {
-              startTime = now;
+            if (lastTimeRef.current === null) {
+              lastTimeRef.current = now;
+            }
+            const delta = (now - lastTimeRef.current) / 1000;
+            lastTimeRef.current = now;
+
+            elapsedRef.current += delta;
+
+            if (elapsedRef.current >= duration && isPlaying) {
+              elapsedRef.current = 0;
+              lastTimeRef.current = null;
               setSceneIdx((prev) => (prev + 1) % scenes.length);
+              return;
             }
 
             ctx.clearRect(0, 0, width, height);
@@ -258,7 +282,7 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
               fps: 60,
               style: "modern",
             });
-            frameRenderer(ctx, elapsed % duration, duration);
+            frameRenderer(ctx, elapsedRef.current % duration, duration);
           }
         } catch (e) {
           console.warn("Canvas animation render error:", e);
@@ -270,19 +294,29 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
     };
 
     if (isPlaying) {
+      lastTimeRef.current = null;
       try {
         initSpeechSynthesis();
-        speakNarration(currentScene.narration, "fable", false, 0.95, 1.0); // British Narrator (fable)
+        // If resuming after a pause, continue the audio instead of restarting!
+        if (elapsedRef.current > 0.1) {
+          resumeNarration();
+        } else {
+          speakNarration(currentScene.narration, "fable", false, 0.95, 1.0);
+        }
       } catch (err) {
-        console.warn("Speech synthesis error:", err);
+        console.warn("Speech playback error:", err);
       }
       animFrame = requestAnimationFrame(render);
     } else {
+      // When paused: pause audio in place so it continues on next play
       try {
-        stopNarration();
+        pauseNarration();
       } catch (err) {
-        console.warn("Stop narration error:", err);
+        console.warn("Pause audio error:", err);
       }
+      lastTimeRef.current = null;
+
+      // Keep current frame painted on canvas
       const canvas = canvasRef.current;
       if (canvas && currentScene) {
         try {
@@ -294,10 +328,10 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
               fps: 60,
               style: "modern",
             });
-            frameRenderer(ctx, 3, 10);
+            frameRenderer(ctx, elapsedRef.current, currentScene.duration || 10);
           }
         } catch (err) {
-          console.warn("Canvas static frame render error:", err);
+          console.warn("Canvas paused frame render error:", err);
         }
       }
     }
@@ -305,7 +339,7 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
     return () => {
       if (animFrame) cancelAnimationFrame(animFrame);
     };
-  }, [isPlaying, sceneIdx, currentScene, scenes.length]);
+  }, [isPlaying, currentScene, scenes.length]);
 
   return (
     <div id="demo" className="relative rounded-2xl p-2 border border-white/10 bg-white/[0.02] shadow-2xl overflow-hidden">

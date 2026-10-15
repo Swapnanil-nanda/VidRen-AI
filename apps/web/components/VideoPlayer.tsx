@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Volume2, VolumeX, Volume1, Volume, Download, RefreshCw, Sparkles, Play, Pause, Maximize, Minimize, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { ScenePlan, VideoProject } from "../types";
 import { createFrameRenderer } from "../lib/sceneRenderer";
-import { speakNarration, speakMasterScriptContinuously, stopNarration, initSpeechSynthesis, playAudioChime } from "../lib/speechSynthesis";
+import { speakNarration, speakMasterScriptContinuously, stopNarration, pauseNarration, resumeNarration, initSpeechSynthesis, playAudioChime } from "../lib/speechSynthesis";
 import { buildLinearMasterScript } from "../lib/linearNarrativeEngine";
 
 interface VideoPlayerProps {
@@ -166,16 +166,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     initSpeechSynthesis();
     if (isPlaying) {
       setIsPlaying(false);
-      stopNarration();
+      pauseNarration();
     } else {
       if (currentTime >= totalDuration) {
         setCurrentTime(0);
         activeSceneIndexRef.current = 0;
+        const masterScript = buildLinearMasterScript(scenesList, project?.prompt || "");
+        const voice = project?.voiceover || "fable";
+        speakMasterScriptContinuously(masterScript, voice, isMuted, 1, volume);
+      } else {
+        resumeNarration();
       }
       setIsPlaying(true);
-      const masterScript = buildLinearMasterScript(scenesList, project?.prompt || "");
-      const voice = project?.voiceover || "nova";
-      speakMasterScriptContinuously(masterScript, voice, isMuted, 1, volume);
     }
   };
 

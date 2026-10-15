@@ -73,13 +73,72 @@ export function initSpeechSynthesis(): void {
   }
 }
 
+let isAudioPaused = false;
+let lastSpokenCharIndex = 0;
+let currentUtteranceFullText = "";
+let currentVoiceOption: VoiceOption = "nova";
+let currentIsMuted = false;
+let currentSpeed = 1.0;
+let currentVolume = 1.0;
+
 export function stopNarration(): void {
   if (typeof window !== "undefined" && "speechSynthesis" in window) {
     window.speechSynthesis.cancel();
     window._activeUtteranceRef = null;
     window._activeUtteranceText = "";
+    isAudioPaused = false;
+    lastSpokenCharIndex = 0;
+    currentUtteranceFullText = "";
     notifyState(false, "");
   }
+}
+
+export function pauseNarration(): void {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  const synth = window.speechSynthesis;
+  if (synth.speaking && !synth.paused) {
+    try {
+      synth.pause();
+      isAudioPaused = true;
+    } catch (e) {
+      console.warn("speechSynthesis pause error:", e);
+    }
+  }
+}
+
+export function resumeNarration(): boolean {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+  const synth = window.speechSynthesis;
+  if (synth.paused) {
+    try {
+      synth.resume();
+      isAudioPaused = false;
+      return true;
+    } catch (e) {
+      console.warn("speechSynthesis resume error:", e);
+    }
+  }
+
+  if (isAudioPaused && currentUtteranceFullText) {
+    isAudioPaused = false;
+    const remaining = currentUtteranceFullText.slice(lastSpokenCharIndex);
+    if (remaining.trim()) {
+      speakMasterScriptContinuously(
+        remaining,
+        currentVoiceOption,
+        currentIsMuted,
+        currentSpeed,
+        currentVolume
+      );
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isNarrationPaused(): boolean {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
+  return window.speechSynthesis.paused || isAudioPaused;
 }
 
 export function speakMasterScriptContinuously(
@@ -105,6 +164,13 @@ export function speakMasterScriptContinuously(
 
   stopNarration();
   window._activeUtteranceText = masterScriptText;
+  currentUtteranceFullText = masterScriptText;
+  currentVoiceOption = voiceOption;
+  currentIsMuted = isMuted;
+  currentSpeed = speed;
+  currentVolume = volume;
+  lastSpokenCharIndex = 0;
+  isAudioPaused = false;
 
   if (isMuted || volume <= 0 || !masterScriptText.trim()) {
     return;
@@ -114,6 +180,11 @@ export function speakMasterScriptContinuously(
 
   const utterance = new SpeechSynthesisUtterance(masterScriptText);
   utterance.volume = Math.min(Math.max(volume, 0), 1);
+  utterance.onboundary = (e: SpeechSynthesisEvent) => {
+    if (typeof e.charIndex === "number") {
+      lastSpokenCharIndex = e.charIndex;
+    }
+  };
 
   switch (voiceOption) {
     case "alloy":
