@@ -52,7 +52,10 @@ export function getSceneImage(title: string, purpose: string, sceneNumber: numbe
     : "ai";
 
   const list = FAILSAFE_TOPIC_PHOTOS[topicKey] || FAILSAFE_TOPIC_PHOTOS.ai;
-  const rawUrl = list[(sceneNumber + index) % list.length];
+  if (!list || list.length === 0) return null;
+  const safeIdx = Math.abs(Math.floor(Number(sceneNumber) || 1) + Math.floor(Number(index) || 0)) % list.length;
+  const rawUrl = list[safeIdx];
+  if (!rawUrl) return null;
 
   if (!verifyImageRelevance(rawUrl, title, topicKey)) {
     return null;
