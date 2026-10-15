@@ -57,7 +57,24 @@ function drawVignette(ctx: CanvasRenderingContext2D, width: number, height: numb
   ctx.restore();
 }
 
-export function createFrameRenderer(scene: ScenePlan, config: RenderConfig & { boardStyle?: BoardStyle }): FrameRenderer {
+export function createFrameRenderer(rawScene: ScenePlan, config: RenderConfig & { boardStyle?: BoardStyle }): FrameRenderer {
+  const scene: ScenePlan = {
+    ...rawScene,
+    rendererType: rawScene.rendererType || (rawScene as any).renderer || "process",
+    visualPrimitives: Array.isArray(rawScene.visualPrimitives) ? rawScene.visualPrimitives : [],
+    overlayElements: Array.isArray(rawScene.overlayElements) ? rawScene.overlayElements : [],
+    visualLanguage: {
+      theme: rawScene.visualLanguage?.theme || "dark",
+      primaryColor: rawScene.visualLanguage?.primaryColor || "#6366F1",
+      secondaryColor: rawScene.visualLanguage?.secondaryColor || "#8B5CF6",
+      accentColor: rawScene.visualLanguage?.accentColor || "#38BDF8",
+    },
+    title: rawScene.title || "Scene",
+    narration: rawScene.narration || "",
+    sceneNumber: rawScene.sceneNumber || 1,
+    duration: Number((rawScene as any).duration) || 10,
+  };
+
   const narration = scene.narration || "";
   const words = narration.split(/\s+/).filter((w) => w.length > 0);
   const title = scene.title || `Scene ${scene.sceneNumber || 1}`;
@@ -136,8 +153,12 @@ export function createFrameRenderer(scene: ScenePlan, config: RenderConfig & { b
     ctx.fillRect(0, 0, width * progress, 4);
     ctx.restore();
 
-    const rendererFn: RendererFunction = RENDERER_REGISTRY[rendererType] || RENDERER_REGISTRY.process;
-    rendererFn(ctx, scene, timestamp, duration, config);
+    try {
+      const rendererFn: RendererFunction = RENDERER_REGISTRY[rendererType] || RENDERER_REGISTRY.process;
+      rendererFn(ctx, scene, timestamp, duration, config);
+    } catch (err) {
+      console.warn("Renderer function execution error caught safely:", err);
+    }
 
     if (scene.overlayElements && Array.isArray(scene.overlayElements) && scene.overlayElements.length > 0) {
       const strokes = scene.overlayElements.filter((el) => el && el.kind === "stroke").map((el) => el as any);

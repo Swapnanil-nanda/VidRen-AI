@@ -212,7 +212,22 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sceneIdx, setSceneIdx] = useState(0);
 
-  const scenes = HISTORICAL_CURRICULUM.slice(0, 6);
+  const scenes = HISTORICAL_CURRICULUM.slice(0, 6).map((item, idx) => ({
+    title: item.title,
+    purpose: item.purpose,
+    narration: item.narration,
+    rendererType: item.renderer || "process",
+    sceneNumber: idx + 1,
+    duration: 10,
+    visualPrimitives: [],
+    overlayElements: [],
+    visualLanguage: {
+      theme: "dark",
+      primaryColor: "#6366F1",
+      secondaryColor: "#8B5CF6",
+      accentColor: "#38BDF8",
+    },
+  }));
   const currentScene = scenes[sceneIdx % scenes.length];
 
   useEffect(() => {
@@ -223,26 +238,30 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
     const render = (now: number) => {
       const canvas = canvasRef.current;
       if (canvas && currentScene) {
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          const width = canvas.width;
-          const height = canvas.height;
-          const elapsed = (now - startTime) / 1000;
-          const duration = (currentScene as any).duration || 10;
+        try {
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            const width = canvas.width;
+            const height = canvas.height;
+            const elapsed = (now - startTime) / 1000;
+            const duration = currentScene.duration || 10;
 
-          if (elapsed >= duration && isPlaying) {
-            startTime = now;
-            setSceneIdx((prev) => (prev + 1) % scenes.length);
+            if (elapsed >= duration && isPlaying) {
+              startTime = now;
+              setSceneIdx((prev) => (prev + 1) % scenes.length);
+            }
+
+            ctx.clearRect(0, 0, width, height);
+            const frameRenderer = createFrameRenderer(currentScene as any, {
+              width,
+              height,
+              fps: 60,
+              style: "modern",
+            });
+            frameRenderer(ctx, elapsed % duration, duration);
           }
-
-          ctx.clearRect(0, 0, width, height);
-          const frameRenderer = createFrameRenderer(currentScene as any, {
-            width,
-            height,
-            fps: 60,
-            style: "modern",
-          });
-          frameRenderer(ctx, elapsed % duration, duration);
+        } catch (e) {
+          console.warn("Canvas animation render error:", e);
         }
       }
       if (isPlaying) {
@@ -251,22 +270,34 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
     };
 
     if (isPlaying) {
-      initSpeechSynthesis();
-      speakNarration(currentScene.narration, "fable", false, 0.95, 1.0); // British Narrator (fable)
+      try {
+        initSpeechSynthesis();
+        speakNarration(currentScene.narration, "fable", false, 0.95, 1.0); // British Narrator (fable)
+      } catch (err) {
+        console.warn("Speech synthesis error:", err);
+      }
       animFrame = requestAnimationFrame(render);
     } else {
-      stopNarration();
+      try {
+        stopNarration();
+      } catch (err) {
+        console.warn("Stop narration error:", err);
+      }
       const canvas = canvasRef.current;
       if (canvas && currentScene) {
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          const frameRenderer = createFrameRenderer(currentScene as any, {
-            width: canvas.width,
-            height: canvas.height,
-            fps: 60,
-            style: "modern",
-          });
-          frameRenderer(ctx, 3, 10);
+        try {
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            const frameRenderer = createFrameRenderer(currentScene as any, {
+              width: canvas.width,
+              height: canvas.height,
+              fps: 60,
+              style: "modern",
+            });
+            frameRenderer(ctx, 3, 10);
+          }
+        } catch (err) {
+          console.warn("Canvas static frame render error:", err);
         }
       }
     }
@@ -274,7 +305,7 @@ const FrenchRevolutionDemoPlayer: React.FC<{ isPlaying: boolean; onTogglePlay: (
     return () => {
       if (animFrame) cancelAnimationFrame(animFrame);
     };
-  }, [isPlaying, sceneIdx, currentScene]);
+  }, [isPlaying, sceneIdx, currentScene, scenes.length]);
 
   return (
     <div id="demo" className="relative rounded-2xl p-2 border border-white/10 bg-white/[0.02] shadow-2xl overflow-hidden">
